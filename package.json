@@ -15,10 +15,16 @@
     "postinstall": "wxt prepare"
   },
   "dependencies": {
+    "@emoji-mart/data": "^1.2.1",
     "@tailwindcss/vite": "^4.0.7",
+    "@webcomponents/custom-elements": "^1.6.0",
+    "audiobuffer-to-wav": "^1.0.0",
+    "emoji-mart": "^5.6.0",
     "solid-icons": "^1.1.0",
     "solid-js": "^1.9.3",
-    "tailwindcss": "^4.0.7"
+    "tailwindcss": "^4.0.7",
+    "wavesurfer-multitrack": "file:../wavesurfer-multitrack",
+    "wavesurfer.js": "^7.9.1"
   },
   "devDependencies": {
     "@types/chrome": "^0.0.280",
