@@ -1,21 +1,18 @@
 import '@webcomponents/custom-elements';
 import { Show } from "solid-js";
-import { FaSolidComment, FaRegularFaceSmile } from "solid-icons/fa";
+import { FaRegularFaceSmile } from "solid-icons/fa";
+import { mommentsStore } from './store';
+import { ActivationButton, AddCommentButton, SettingsButton } from './components';
 // import EmojiPicker from "./EmojiPicker";
 // import { Picker } from 'emoji-mart'
 // import data from '@emoji-mart/data'
-import Playlist from './playlist';
+// import Playlist from './components/Playlist';
 
 function App() {
-  const [active, setActive] = createSignal(false);
-  // const [emojipicker, setEmojipicker] = createSignal({});
-  // let emojiref;
-
-
   // TODO can i add eventlistener to shadowroot???
-// props.shadowRoot.addEventListener('keydown', (event) => {
-//   console.log(event)
-// })
+  // props.shadowRoot.addEventListener('keydown', (event) => {
+  //   console.log(event)
+  // })
   // Blocks Shortcuts in BandLab (This is the BandLab body, not the chrome Extension body)
   document.querySelector('body')?.addEventListener(
     'keydown',
@@ -25,22 +22,13 @@ function App() {
     true
   );
 
-  // onMount(() => {
-  //   setEmojipicker(new Picker({ data }));
-  //   emojiref!.appendChild(emojipicker());
-  // });
-
-  // onMount(async () => {
-  //   await fetch('https://mhvdtry1ty.ufs.sh/f/h6uI8ZTQyqbsRWz4c0IsIdJQyEcMOmFP14Nwbe6TZz8vjfLo')
-  // })
-
   return (
     <>
-      <Playlist />
+      {/* <Playlist /> */}
       {/* <div ref={emojiref}></div> */}
       {/* <EmojiPicker data={data} /> */}
       {/* Momments Comments Canvas */}
-      <Show when={active()}>
+      <Show when={mommentsStore.appActive}>
         {/* Blocks interaction with the website below */}
         <div class="absolute top-0 bottom-0 left-0 right-0"></div>
 
@@ -68,10 +56,13 @@ function App() {
       </Show>
 
       {/* Momments Activator Button */}
-      <div class='absolute bottom-5 w-full justify-center flex'>
-        <button class='cursor-pointer bg-blue-400 w-16 h-16 rounded-full flex justify-center items-center' onClick={() => setActive(!active())}>
-          <FaSolidComment size={32} color='#ffffff' />
-        </button>
+      <div class='absolute bottom-5 w-full justify-center flex gap-5 items-center'>
+        {mommentsStore.user.token ? <>
+        <Show when={mommentsStore.appActive}>
+          <AddCommentButton />
+        </Show>
+          <ActivationButton />
+        </> : <SettingsButton />}
       </div>
     </>
   );
