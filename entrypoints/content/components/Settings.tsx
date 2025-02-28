@@ -1,15 +1,12 @@
 import { createSignal } from "solid-js"
 import { mommentsStore, setMommentsStore } from "@/entrypoints/content/store"
-import axios from 'axios'
+import { login } from "@/entrypoints/content/api"
 
 export const Settings = () => {
     const [secret, setSecret] = createSignal('')
 
     const handleClick = async (e: Event) => {
-        const { data } = await axios.post('http://localhost:8080/login', {
-            secret: secret()
-        })
-        console.log(data)
+        const { data } = await login(secret())
         setMommentsStore('user', { token: data.token })
     }
 
