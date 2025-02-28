@@ -3,8 +3,6 @@ import { createStore } from 'solid-js/store'
 export const [mommentsStore, setMommentsStore] = createStore({
     user: {
         token: '',
-        id: '',
-        name: '',                
     },            // The user that is currently logged in
     discussions: {
         discussionList: [],       // All the discussions that are available in the workspace

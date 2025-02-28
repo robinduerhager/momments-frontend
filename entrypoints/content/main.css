@@ -13,3 +13,36 @@ body * {
   pointer-events: all;
   z-index: 99;
 }
+
+input {
+  @apply bg-gray-200;
+  @apply bg-zinc-950;
+  @apply border-solid;
+  @apply border-zinc-200;
+  @apply rounded-md;
+  @apply border;
+  @apply h-9;
+  @apply w-full;
+  @apply px-3;
+  @apply py-1;
+  @apply text-zinc-200;
+}
+
+.button-primary {
+  @apply inline-flex;
+  @apply items-center;
+  @apply justify-center;
+  @apply gap-2;
+  @apply whitespace-nowrap;
+  @apply rounded-md;
+  @apply text-sm;
+  @apply font-medium;
+  @apply transition-colors;
+  @apply bg-zinc-200;
+  @apply text-zinc-800;
+  @apply shadow;
+  @apply h-9;
+  @apply px-4;
+  @apply py-2;
+  @apply hover:cursor-pointer
+}
