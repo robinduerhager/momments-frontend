@@ -55,7 +55,18 @@ input {
   height: 10px;
   top: calc(50% - 5px); /* since the indicators are 10px x 10px -5px offset */
   left: calc(50% - 5px); /* since the indicators are 10px x 10px -5px offset */
-  animation: 3s ease-out infinite awarenesspulse;
+  animation: 2s ease-out infinite awarenesspulse;
+}
+
+.discussion-activation-awareness-animation {
+  @apply bg-green-500;
+  @apply rounded-full;
+  @apply absolute;
+  width: 20px;
+  height: 20px;
+  top: calc(50% - 10px); /* since the indicators are 10px x 10px -5px offset */
+  left: calc(50% - 10px); /* since the indicators are 10px x 10px -5px offset */
+  animation: 2s ease-out infinite awarenesspulse;
 }
 
 @keyframes awarenesspulse {
