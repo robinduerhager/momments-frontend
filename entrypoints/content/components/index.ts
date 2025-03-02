@@ -1,5 +1,6 @@
 export { ActivationButton } from './ActivationButton'
 export { SettingsButton } from './SettingsButton'
-export { AddCommentButton } from './AddCommentButton'
-export { Discussion } from './Discussion'
+export { AddDiscussionButton } from './AddDiscussionButton'
+export { Discussion, DiscussionProxy } from './Discussion'
+export { MommentsCanvas } from './MommentsCanvas'
 
