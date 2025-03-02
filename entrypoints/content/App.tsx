@@ -1,7 +1,7 @@
 import '@webcomponents/custom-elements';
 import { Show } from "solid-js";
-import { mommentsStore } from './store';
-import { ActivationButton, AddCommentButton, SettingsButton, Discussion } from './components';
+import { mommentsStore, discussions } from './store';
+import { ActivationButton, SettingsButton, Discussion, DiscussionProxy, AddDiscussionButton, MommentsCanvas } from './components';
 // import EmojiPicker from "./EmojiPicker";
 // import { Picker } from 'emoji-mart'
 // import data from '@emoji-mart/data'
@@ -21,30 +21,6 @@ function App() {
     true
   );
 
-  const discussions = [
-    {
-      id: 1,
-      position: {
-        x: 300,
-        y: 450
-      },
-    },
-    {
-      id: 2,
-      position: {
-        x: 600,
-        y: 650
-      },
-    },
-    {
-      id: 3,
-      position: {
-        x: 200,
-        y: 780
-      },
-    },
-  ]
-
   return (
     <>
       {/* <Playlist /> */}
@@ -53,8 +29,8 @@ function App() {
       {/* Momments Comments Canvas */}
       <Show when={mommentsStore.appActive}>
         {/* Blocks interaction with the website below */}
-        <div class="absolute top-0 bottom-0 left-0 right-0"></div>
-        <For each={discussions}>
+        <MommentsCanvas />
+        <For each={discussions.list}>
           {(discussion) => {
             return (
               <Discussion discussion={discussion} />
@@ -64,14 +40,19 @@ function App() {
       </Show>
 
       {/* Momments Activator Button */}
-      <div class='pointer-events-none absolute bottom-5 w-full justify-center flex gap-5 items-center'>
-        {mommentsStore.user.token ? <>
+      <div class='absolute bottom-5 w-full justify-center flex gap-5 items-center' style={`pointer-events: none;`}>
+        <SettingsButton />
         <Show when={mommentsStore.appActive}>
-          <AddCommentButton />
+          <AddDiscussionButton />
         </Show>
+        <Show when={mommentsStore.user.token}>
           <ActivationButton />
-        </> : <SettingsButton />}
+        </Show>
       </div>
+
+      <Show when={mommentsStore.placeNewDiscussionMode} >
+        <DiscussionProxy />
+      </Show>
     </>
   );
 }
