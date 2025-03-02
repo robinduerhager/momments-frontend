@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { mommentsStore } from '@/entrypoints/content/store'
+import { mommentsStore } from '$/store'
 
 // Setup interceptors for attaching token to any request if available
 axios.interceptors.request.use((config) => {
