@@ -1,18 +1,18 @@
 import { createSignal } from "solid-js"
-import { mommentsStore, setMommentsStore } from "@/entrypoints/content/store"
-import { login } from "@/entrypoints/content/api"
+import { setMommentsStore } from "$/store"
+import { UserService } from "$/services"
 
 export const Settings = () => {
     const [secret, setSecret] = createSignal('')
 
     const handleClick = async (e: Event) => {
-        const { data } = await login(secret())
-        setMommentsStore('user', { token: data.token })
-    }
+        const response = await UserService.login(secret())
 
-    createEffect(() => {
-        console.log(mommentsStore.user.token)
-    })
+        if (!response) 
+            return console.error('Login failed')
+
+        setMommentsStore('user', { token: response.data.token })
+    }
 
     return (
         <>
