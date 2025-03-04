@@ -1,5 +1,5 @@
 import { createStore } from 'solid-js/store'
-import { DiscussionDTO } from '$/services'
+import { CommentDTO, DiscussionDTO } from '$/services'
 
 type MommentsStore = {
     user: {

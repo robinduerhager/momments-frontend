@@ -12,7 +12,7 @@ export const ActivationButton = () => {
     }
 
     return (
-        <button class={`cursor-pointer relative ${mommentsStore.appActive ? 'bg-red-400' : 'bg-blue-400'} ${mommentsStore.appActive ? 'w-[50px] h-[50px]' : 'w-[64px] h-[64px]'} rounded-full flex justify-center items-center`} onClick={handleClick}>
+        <button class={`relative ${mommentsStore.appActive ? 'bg-red-400' : 'bg-blue-400'} ${mommentsStore.appActive ? 'w-[50px] h-[50px]' : 'w-[64px] h-[64px]'} rounded-full flex justify-center items-center`} onClick={handleClick}>
             <Show when={!mommentsStore.appActive} fallback={<FaSolidXmark size={32} color="#ffffff" />}>
                 <FaSolidComment size={32} color="#ffffff" />
                 <div class='w-[20px] h-[20px] rounded-full absolute bottom-0 right-0 bg-green-500'>

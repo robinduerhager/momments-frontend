@@ -1,4 +1,4 @@
-import { onMount, onCleanup, createSignal, createEffect } from "solid-js";
+import { onMount, onCleanup, createSignal } from "solid-js";
 import Multitrack from 'wavesurfer-multitrack';
 
 export default () => {

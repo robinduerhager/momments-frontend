@@ -7,7 +7,7 @@ export const AddDiscussionButton = () => {
     }
 
     return (
-        <button class={`cursor-pointer bg-green-400 w-[64px] h-[64px] rounded-full flex justify-center items-center`} onClick={activateDiscussionPlacementMode}>
+        <button class={`bg-green-400 w-[64px] h-[64px] rounded-full flex justify-center items-center`} onClick={activateDiscussionPlacementMode}>
             <FaSolidPlus size={32} color="#ffffff" />
         </button>
     )

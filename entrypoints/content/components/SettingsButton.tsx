@@ -6,7 +6,6 @@ export const SettingsButton = () => {
         <>
             <Settings />
             <button popoverTarget='settings-popover' class={`
-                cursor-pointer
                 bg-blue-400
                 w-[50px]
                 h-[50px]
