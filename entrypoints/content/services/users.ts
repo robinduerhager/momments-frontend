@@ -3,7 +3,7 @@ import axios from '$/utils/httpclient'
 export type UserDTO = {
   id: number;
   name: string;
-  avatarURL: string;
+  avatar: string;
 }
 
 // Login Handler

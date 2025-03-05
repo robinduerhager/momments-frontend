@@ -5,4 +5,5 @@ export { Discussion, DiscussionProxy } from './Discussion'
 export { MommentsCanvas } from './MommentsCanvas'
 export { Comment } from './Comment'
 export { EditArea } from './EditArea'
+export { Avatar } from './Avatar'
 

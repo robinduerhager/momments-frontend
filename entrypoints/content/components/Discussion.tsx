@@ -8,7 +8,7 @@ import { EditArea, Comment } from '$/components'
 const iconSize = 24
 
 export const Discussion = (props: {
-    discussion: DiscussionDTO
+    discussion: Omit<DiscussionDTO, 'comments'>
 }) => {
     let popoverRef: HTMLDivElement | undefined;
 
@@ -16,11 +16,11 @@ export const Discussion = (props: {
     // Unset Active DIscussion when Popover Closes
     const onToggleDiscussionPopover = async (event: ToggleEvent) => {
         if (event.newState === 'open') {
-            const commentsOfDiscussion = await DiscussionService.getCommentsOfDiscussion(props.discussion.id)
-            setDiscussions('active', event.newState === 'open' ?{
-                ...props.discussion,
-                comments: commentsOfDiscussion
-            } : undefined)
+            const completeDiscussion = await DiscussionService.getDiscussion(props.discussion.id, )
+            console.log(completeDiscussion)
+            setDiscussions('active', completeDiscussion)
+        } else {
+            setDiscussions('active', undefined)
         }
     }
 
@@ -41,7 +41,7 @@ export const Discussion = (props: {
                     <div class='discussion-awareness-animation'></div>
                 </div>
             </button>
-            <div ref={popoverRef} id={`discussion-${props.discussion.id}-popover`} class="w-[320px] h-[450px] rounded-md border-solid border-2 border-zinc-300 overflow-visible" style={`position-anchor: --discussion-${props.discussion.id}; position-area: end; position-try-fallbacks: flip-block, flip-inline, flip-block flip-inline;`} popover>
+            <div ref={popoverRef} id={`discussion-${props.discussion.id}-popover`} class="w-[250px] h-[400px] rounded-md border-solid border border-zinc-300 overflow-visible" style={`position-anchor: --discussion-${props.discussion.id}; position-area: end; position-try-fallbacks: flip-block, flip-inline, flip-block flip-inline;`} popover>
                 {/* Comment Area */}
                 <div class="flex flex-col h-[100%]">
                     <div class='flex-grow overflow-y-auto p-3'>
@@ -49,7 +49,7 @@ export const Discussion = (props: {
                             {(comment) => <Comment comment={comment} />}
                         </For>
                     </div>
-                    <div class="flex flex-col justify-center border-t-2 border-t-zinc-300 p-3">
+                    <div class="flex flex-col justify-center border-t border-t-zinc-300 p-3">
                         <EditArea discussionId={props.discussion.id} />
                     </div>
                 </div>

@@ -13,10 +13,13 @@ export type DiscussionDTO = {
 
 const createDiscussion = async (position: Position) => (await axios.post('/discussions', position)).data
 const getDiscussions = async () => (await axios.get('/discussions')).data
-const getCommentsOfDiscussion = async (discussionId: number): Promise<CommentDTO[]> => (await axios.get(`/discussions/${discussionId}/comments`)).data
+
+// UserId will be appended automatically through the Token
+const getDiscussion = async (discussionId: number) => (await axios.get(`/discussions/${discussionId}`)).data
+// const getCommentsOfDiscussion = async (discussionId: number): Promise<CommentDTO[]> => (await axios.get(`/discussions/${discussionId}/comments`)).data
 
 export default {
     createDiscussion,
     getDiscussions,
-    getCommentsOfDiscussion
+    getDiscussion
 }

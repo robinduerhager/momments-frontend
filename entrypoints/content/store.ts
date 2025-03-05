@@ -6,7 +6,7 @@ type MommentsStore = {
         token: string
     }
     discussions: {
-        list: DiscussionDTO[]
+        list: Omit<DiscussionDTO, 'comments'>[]
         active?: DiscussionDTO
     }
     appActive: boolean
@@ -24,7 +24,6 @@ export const [mommentsStore, setMommentsStore] = createStore<MommentsStore>({
     appActive: false,    // Whether the Discussion Mode is active in the workspace
     placeNewDiscussionMode: false
   })
-
 
 // Nested store for better managing discussions
 export const [discussions, setDiscussions] = createStore(mommentsStore.discussions)

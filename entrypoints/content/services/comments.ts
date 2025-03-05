@@ -21,7 +21,7 @@ export enum CommentModuleType {
 }
 
 const createDraft = async (discussionId: number) => (await axios.post(`/discussions/${discussionId}/comments`)).data
-const getCommentsOfDiscussion = async (discussionId: number): Promise<CommentDTO[]> => (await axios.get('/comments', { params: { discussionId } })).data
+// const getCommentsOfDiscussion = async (discussionId: number): Promise<CommentDTO[]> => (await axios.get('/comments', { params: { discussionId } })).data
 const getComment = async (commentId: number) => (await axios.get('/comments', { params: { commentId } })).data
 
 // TODO: Implement the rest of the CommentModule types
@@ -38,6 +38,6 @@ const createCommentModule = async ({discussionId, commentId, type, content}: {
 export default {
     createDraft,
     getComment,
-    getCommentsOfDiscussion,
+    // getCommentsOfDiscussion,
     createCommentModule
 }

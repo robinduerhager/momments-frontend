@@ -14,6 +14,8 @@ export const EditArea = (props: {
         if (!discussions.active)
             return console.error('No active discussion')
 
+        // Since the backend sends only drafts for this user, the filtered array will be length of 1 or 0
+        // depending on if a draft exists for this user in that discussion or not
         if (discussions.active.comments && discussions.active.comments.filter(comment => !comment.published).length === 1)
             return console.error('Draft already exists for this Discussion')
 
@@ -65,14 +67,14 @@ export const EditArea = (props: {
         <>
             {/* Show the Edit Area when a draft is present, else the Add Comment button */}
             <Show when={discussions.active?.id === props.discussionId && discussions.active?.comments.length !== 0 && discussions.active?.comments.filter(comment => !comment.published)} fallback={<button class="button-primary" onClick={handleDraftCreation}>Add Draft</button>}>
-                <div class="flex p-2 border-solid border-zinc-300 border-2 rounded-md">
+                <div class="flex p-2 border-solid border-zinc-300 border rounded-md">
                     <textarea class='grow mr-2.5' style={`resize: none;`} onInput={(e) => { setDraftText(e.target.value) }} value={draftText()}></textarea>
                     <div class='flex flex-col gap-2.5'>
                         <button onClick={appendTextModule}>
-                            <FaSolidArrowUp size={24} />
+                            <FaSolidArrowUp size={18} />
                         </button>
                         <button onClick={toggleEmojiPicker}> 
-                            <FaRegularFaceSmile size={24} color='#9F9FA9' />
+                            <FaRegularFaceSmile size={18} color='#9F9FA9' />
                         </button>
                         <Show when={showEmojiPicker()}>
                             <EmojiPicker onEmojiSelect={handleEmojiSelect} />
