@@ -10,12 +10,15 @@ export type UserDTO = {
 const login = async (
   secret: string
 ) => await axios.post('/login', {
-    secret: secret
+    secret
   }).catch((err) => {
     console.error(err)
   }
 )
 
+const me = async () => await axios.get('/me')
+
 export default {
-  login
+  login,
+  me
 }
