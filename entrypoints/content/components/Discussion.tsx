@@ -31,7 +31,7 @@ export const Discussion = (props: {
     }
 
     const adjustScroll = () => {
-        commentsListRef?.children[commentsListRef.children.length - 1]?.scrollIntoView(true)
+        commentsListRef?.children[commentsListRef.children.length - 1]?.scrollIntoView(false)
     }
 
     const handleDraftCreation = async () => {
