@@ -3,7 +3,9 @@ import { CommentDTO, DiscussionDTO } from '$/services'
 
 type MommentsStore = {
     user: {
-        token: string
+        token: string,
+        name?: string,
+        avatar?: string
     }
     discussions: {
         list: Omit<DiscussionDTO, 'comments'>[]
@@ -16,6 +18,8 @@ type MommentsStore = {
 export const [mommentsStore, setMommentsStore] = createStore<MommentsStore>({
     user: {
         token: '',
+        name: undefined,
+        avatar: undefined
     },            // The user that is currently logged in
     discussions: {
         list: [],       // All the discussions that are available in the workspace
@@ -27,3 +31,4 @@ export const [mommentsStore, setMommentsStore] = createStore<MommentsStore>({
 
 // Nested store for better managing discussions
 export const [discussions, setDiscussions] = createStore(mommentsStore.discussions)
+export const [user, setUser] = createStore(mommentsStore.user)
