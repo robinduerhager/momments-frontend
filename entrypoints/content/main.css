@@ -92,6 +92,14 @@ button[disabled] {
   @apply opacity-50;
 }
 
+dialog {
+  position-area: center;
+  @apply p-5;
+  @apply border;
+  @apply border-zinc-200;
+  @apply rounded-md;
+}
+
 @keyframes awarenesspulse {
   0% {
     transform: scale(1);
