@@ -72,6 +72,26 @@ input {
   animation: 2s ease-out infinite awarenesspulse;
 }
 
+.comment {
+  @apply border-b;
+  @apply border-zinc-200;
+  @apply my-4;
+  @apply px-3;
+  @apply pb-3;
+}
+
+.comment:last-child {
+  @apply border-none;
+  @apply border-zinc-200;
+  /* @apply mb-0; */
+  @apply pb-0;
+}
+
+button[disabled] {
+  @apply cursor-default;
+  @apply opacity-50;
+}
+
 @keyframes awarenesspulse {
   0% {
     transform: scale(1);
