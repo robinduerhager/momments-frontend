@@ -28,8 +28,7 @@ export const EditArea = (props: {
         if (!discussions.active.comments || discussions.active.comments.filter(comment => !comment.published).length === 0)
             return console.error('No draft present')
 
-        const newModule = await CommentService.createCommentModule({
-            discussionId: props.discussionId,
+        const newModule = await CommentService.createCommentTextModule({
             commentId: discussions.active?.comments.filter(comment => !comment.published)[0].id,
             type: CommentModuleType.TEXT,
             content: draftText()

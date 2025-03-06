@@ -12,13 +12,14 @@ export type CommentDTO = {
 }
 
 // TODO: Add the rest of the CommentModule properties
-export type CommentModuleDTO = {
-    id: number;
-}
+// export type CommentModuleDTO = {
+//     id: number;
+// }
 
 // TODO: Add the rest of the CommentModules
 export enum CommentModuleType {
     TEXT = 'TEXT',
+    REFSONG = 'REFSONG'
 }
 
 // Create a Draft Comment on a Discussion
@@ -31,12 +32,20 @@ const publishComment = async (commentId: number) => (await axios.patch(`/comment
 })).data
 
 // TODO: Implement the rest of the CommentModule types
-const createCommentModule = async ({discussionId, commentId, type, content}: {
-    discussionId: number;
+const createCommentTextModule = async ({commentId, type, content}: {
     commentId: number;
     type: CommentModuleType;
     content: string;
-}) => (await axios.post(`/discussions/${discussionId}/comments/${commentId}/modules`, {
+}) => (await axios.post(`/comments/${commentId}/modules`, {
+    type,
+    content
+})).data
+
+const createCommentRefSongModule = async ({commentId, type, content}: {
+    commentId: number;
+    type: CommentModuleType;
+    content: string;
+}) => (await axios.post(`/comments/${commentId}/modules`, {
     type,
     content
 })).data
@@ -44,7 +53,7 @@ const createCommentModule = async ({discussionId, commentId, type, content}: {
 export default {
     createDraft,
     getComment,
-    // getCommentsOfDiscussion,
-    createCommentModule,
-    publishComment
+    publishComment,
+    createCommentTextModule,
+    createCommentRefSongModule
 }
