@@ -1,25 +1,40 @@
 import { For } from 'solid-js'
-import { CommentDTO } from "$/services"
-import { Avatar } from '$/components'
-import { FaSolidUpload } from 'solid-icons/fa'
+import { CommentDTO, CommentService } from "$/services"
+import { Avatar, DateDisplay } from '$/components'
+import { PublishButton } from './PublishButton'
+import { setDiscussions } from '$/store'
 
 export const Comment = (props: {
     comment: CommentDTO
 }) => {
+
+    const handlePublishComment = async () => {
+        const updatedComment = await CommentService.publishComment(props.comment.id)
+        
+        if (!updatedComment)
+            return console.error('Something went wrong')
+
+        // Update the comment in the store with the new published and publishedAt values
+        setDiscussions('active', 'comments', (comment) => !comment.published, produce(comment => {
+            comment.published = updatedComment.published
+            comment.publishedAt = updatedComment.publishedAt
+        }))
+    }
+    
     return (
-        <div>
-            <div class='flex gap-2.5'>
+        <div class='comment'>
+            <div class='flex gap-2.5 mb-2'>
                 <Avatar image={`${props.comment.author.avatar}`}/>
                 <div class="flex flex-col grow">
                     <span class='font-semibold text-zinc-200'>{props.comment.author.name}</span>
-                    {/* TODO: Dateformatter bauen (nachdem man Kommentare publishen kann, sonst kann man das schlecht testen) */}
-                    <span class='text-zinc-400'>{props.comment.publishedAt ? props.comment.publishedAt : 'Draft'}</span>
+                    <Show when={props.comment.publishedAt} fallback={<span class='text-amber-400'>Draft</span>}>
+                        <DateDisplay date={new Date(props.comment.publishedAt)} />
+                    </Show>
                 </div>
 
-                {/* Publish Button */}
-                <button>
-                    <FaSolidUpload size={18} />
-                </button>
+                <Show when={!props.comment.published}>
+                    <PublishButton commentHasModules={Boolean(props.comment.modules.length)} onClick={handlePublishComment} />
+                </Show>
             </div>
 
                 {/* <li>author: {props.comment.author.id}</li>
