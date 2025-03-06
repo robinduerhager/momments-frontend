@@ -1,7 +1,7 @@
-import { createSignal, Show } from 'solid-js'
+import { createSignal, Show, on } from 'solid-js'
 import { FaSolidComment } from 'solid-icons/fa'
 import { setMommentsStore, discussions, setDiscussions } from '$/store'
-import { DiscussionService, DiscussionDTO } from '$/services'
+import { CommentService, DiscussionService, DiscussionDTO } from '$/services'
 import { Position } from '$/utils/types'
 import { EditArea, Comment } from '$/components'
 
@@ -10,18 +10,49 @@ const iconSize = 24
 export const Discussion = (props: {
     discussion: Omit<DiscussionDTO, 'comments'>
 }) => {
-    let popoverRef: HTMLDivElement | undefined;
+    let popoverRef: HTMLDivElement | undefined
+    let commentsListRef: HTMLDivElement | undefined
+    const draftExists = () => discussions.active?.comments.filter(comment => !comment.published).length === 1
 
     // Set Active Discussion when Popover Opens
     // Unset Active DIscussion when Popover Closes
     const onToggleDiscussionPopover = async (event: ToggleEvent) => {
+        // If popover has been opened: get all Comments for this Discussion
         if (event.newState === 'open') {
-            const completeDiscussion = await DiscussionService.getDiscussion(props.discussion.id, )
-            console.log(completeDiscussion)
+            const completeDiscussion = await DiscussionService.getDiscussion(props.discussion.id,)
             setDiscussions('active', completeDiscussion)
         } else {
             setDiscussions('active', undefined)
         }
+
+        // if (event.newState === 'open') {
+        //     adjustScroll()
+        // }
+    }
+
+    const adjustScroll = () => {
+        commentsListRef?.children[commentsListRef.children.length - 1]?.scrollIntoView(true)
+    }
+
+    const handleDraftCreation = async () => {
+        if (!discussions.active)
+            return console.error('No active discussion')
+
+        // Since the backend sends only drafts for this user, the filtered array will be length of 1 or 0
+        // depending on if a draft exists for this user in that discussion or not
+        if (discussions.active.comments && discussions.active.comments.filter(comment => !comment.published).length === 1)
+            return console.error('Draft already exists for this Discussion')
+
+        // Else create a new draft
+        const newDraft = await CommentService.createDraft(props.discussion.id)
+
+        if (!newDraft)
+            return console.error('Something went wrong')
+
+        setDiscussions('active', (activeDiscussion) => ({
+            ...activeDiscussion,
+            comments: activeDiscussion ? [...activeDiscussion.comments, newDraft] : [newDraft]
+        }))
     }
 
     // On popover open and close...
@@ -33,6 +64,16 @@ export const Discussion = (props: {
         popoverRef?.removeEventListener('toggle', (e) => onToggleDiscussionPopover(e as ToggleEvent))
     })
 
+    // Adjust the scroll of the comments list, whenever the active discussion changes
+    // the comment list length changes
+    // or the modules length of the comment draft changes
+    createEffect(() => {
+       discussions.active,
+       discussions.active?.comments.filter(comment => !comment.published)[0]?.modules?.length,
+       discussions.active?.comments.length
+       adjustScroll()
+    })
+
     return (
         <>
             <button popoverTarget={`discussion-${props.discussion.id}-popover`} class="absolute" style={`anchor-name: --discussion-${props.discussion.id}; top: ${props.discussion.posY}px; left: ${props.discussion.posX}px;`}>
@@ -41,16 +82,19 @@ export const Discussion = (props: {
                     <div class='discussion-awareness-animation'></div>
                 </div>
             </button>
-            <div ref={popoverRef} id={`discussion-${props.discussion.id}-popover`} class="w-[250px] h-[400px] rounded-md border-solid border border-zinc-300 overflow-visible" style={`position-anchor: --discussion-${props.discussion.id}; position-area: end; position-try-fallbacks: flip-block, flip-inline, flip-block flip-inline;`} popover>
+            <div ref={popoverRef} id={`discussion-${props.discussion.id}-popover`} class="w-[300px] h-[400px] rounded-md border-solid border border-zinc-300 overflow-visible" style={`position-anchor: --discussion-${props.discussion.id}; position-area: end; position-try-fallbacks: flip-block, flip-inline, flip-block flip-inline;`} popover>
                 {/* Comment Area */}
                 <div class="flex flex-col h-[100%]">
-                    <div class='flex-grow overflow-y-auto p-3'>
+                    {/* Comments List Container */}
+                    <div ref={commentsListRef} class='flex-grow overflow-y-auto commentsList'>
                         <For each={discussions.active?.comments}>
                             {(comment) => <Comment comment={comment} />}
                         </For>
                     </div>
                     <div class="flex flex-col justify-center border-t border-t-zinc-300 p-3">
-                        <EditArea discussionId={props.discussion.id} />
+                        <Show when={draftExists()} fallback={<button class="button-primary" onClick={handleDraftCreation}>Add Draft</button>}>
+                            <EditArea discussionId={props.discussion.id} />
+                        </Show>
                     </div>
                 </div>
             </div>

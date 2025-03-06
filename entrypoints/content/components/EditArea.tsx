@@ -1,4 +1,4 @@
-import { discussions, mommentsStore, setDiscussions } from '$/store'
+import { discussions, setDiscussions } from '$/store'
 import { CommentService, CommentModuleType } from '$/services'
 import { createSignal } from 'solid-js'
 import { FaSolidArrowUp, FaRegularFaceSmile } from 'solid-icons/fa'
@@ -9,27 +9,6 @@ export const EditArea = (props: {
 }) => {
     const [draftText, setDraftText] = createSignal('')
     const [showEmojiPicker, setShowEmojiPicker] = createSignal(false)
-
-    const handleDraftCreation = async () => {
-        if (!discussions.active)
-            return console.error('No active discussion')
-
-        // Since the backend sends only drafts for this user, the filtered array will be length of 1 or 0
-        // depending on if a draft exists for this user in that discussion or not
-        if (discussions.active.comments && discussions.active.comments.filter(comment => !comment.published).length === 1)
-            return console.error('Draft already exists for this Discussion')
-
-        // Else create a new draft
-        const newDraft = await CommentService.createDraft(props.discussionId)
-
-        if (!newDraft)
-            return console.error('Something went wrong')
-
-        setDiscussions('active', (activeDiscussion) => ({
-            ...activeDiscussion,
-            comments: activeDiscussion ? [...activeDiscussion.comments, newDraft] : [newDraft]
-        }))
-    }
 
     const toggleEmojiPicker = () => {
         setShowEmojiPicker(!showEmojiPicker())
@@ -66,7 +45,7 @@ export const EditArea = (props: {
     return (
         <>
             {/* Show the Edit Area when a draft is present, else the Add Comment button */}
-            <Show when={discussions.active?.id === props.discussionId && discussions.active?.comments.length !== 0 && discussions.active?.comments.filter(comment => !comment.published)} fallback={<button class="button-primary" onClick={handleDraftCreation}>Add Draft</button>}>
+            {/* <Show when={discussions.active?.comments.length !== 0 && discussions.active?.comments.filter(comment => !comment.published)}> */}
                 <div class="flex p-2 border-solid border-zinc-300 border rounded-md">
                     <textarea class='grow mr-2.5' style={`resize: none;`} onInput={(e) => { setDraftText(e.target.value) }} value={draftText()}></textarea>
                     <div class='flex flex-col gap-2.5'>
@@ -81,7 +60,7 @@ export const EditArea = (props: {
                         </Show>
                     </div>
                 </div>
-            </Show>
+            {/* </Show> */}
 
         </>
     )
