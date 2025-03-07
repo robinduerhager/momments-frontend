@@ -100,6 +100,10 @@ dialog {
   @apply rounded-md;
 }
 
+textarea {
+  outline: none;
+}
+
 @keyframes awarenesspulse {
   0% {
     transform: scale(1);
