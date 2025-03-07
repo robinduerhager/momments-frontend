@@ -1,9 +1,10 @@
 import { For } from 'solid-js'
-import { CommentDTO, CommentService } from "$/services"
+import { FaSolidTrash } from 'solid-icons/fa'
+import { CommentDTO, CommentModulesService, CommentService } from "$/services"
 import { Avatar, DateDisplay } from '$/components'
 import { PublishButton } from './PublishButton'
 import { setDiscussions } from '$/store'
-import { spotifyEmbedder } from '$/services/embedders'
+import { refSongEmbedder } from '$/services/embedders'
 
 export const Comment = (props: {
     comment: CommentDTO
@@ -20,6 +21,17 @@ export const Comment = (props: {
             comment.published = updatedComment.published
             comment.publishedAt = updatedComment.publishedAt
         }))
+    }
+
+    const handleModuleDelete = async (id: number) => {
+        const deletedModuleId = await CommentModulesService.delete(id)
+
+        if (!deletedModuleId)
+            return console.error('Something went wrong')
+
+        // Remove the deleted Module from the modules list of that Comment
+        // e.g. construct a new array without the deleted module
+        setDiscussions('active', 'comments', (comment) => comment.id === props.comment.id, 'modules', (modules) => modules.filter(module => module.id !== deletedModuleId))
     }
 
     return (
@@ -46,15 +58,29 @@ export const Comment = (props: {
                 <li>updatedAt: {props.comment.updatedAt}</li> */}
             {/* TODO Add Spotify, Audiomessage and Composition Types */}
             <div class='flex flex-col gap-1'>
-            {/* "https://open.spotify.com/embed/track/1CZw0Lymzi2Lvy1XZ6rXh5?utm_source=generator" */}
                 <For each={props.comment.modules}>
                     {(module) => {
                         if (module.type === 'TEXT') {
-                            return <p>{module.text.content}</p>
-                        } else if (module.type === 'REFSONG') {
-                            console.log(module)
                             return (
-                                spotifyEmbedder.generate(module.refsong.content)
+                                <div class={`${!props.comment.publishedAt ? 'flex pr-5 items-center' : 'flex items-center'}`}>
+                                    <p class='grow'>{module.text!.content}</p>
+                                    <Show when={!props.comment.publishedAt}>
+                                        <button onClick={() => handleModuleDelete(module.id)}>
+                                            <FaSolidTrash size={16} />
+                                        </button>
+                                    </Show>
+                                </div>
+                            )
+                        } else if (module.type === 'REFSONG') {
+                            return (
+                                <div class={`${!props.comment.publishedAt ? 'flex pr-5 items-center' : 'flex items-center'}`}>
+                                    {refSongEmbedder.generate(module.refsong!.content)}
+                                    <Show when={!props.comment.publishedAt}>
+                                        <button onClick={() => handleModuleDelete(module.id)}>
+                                            <FaSolidTrash size={16} />
+                                        </button>
+                                    </Show>
+                                </div>
                             )
                         }
                         else {

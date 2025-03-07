@@ -82,7 +82,7 @@ export const Discussion = (props: {
                     <div class='discussion-awareness-animation'></div>
                 </div>
             </button>
-            <div ref={popoverRef} id={`discussion-${props.discussion.id}-popover`} class="w-[300px] h-[400px] rounded-md border-solid border border-zinc-300 overflow-visible" style={`position-anchor: --discussion-${props.discussion.id}; position-area: end; position-try-fallbacks: flip-block, flip-inline, flip-block flip-inline;`} popover>
+            <div ref={popoverRef} id={`discussion-${props.discussion.id}-popover`} class="w-[330px] h-[400px] rounded-md border-solid border border-zinc-300 overflow-visible" style={`position-anchor: --discussion-${props.discussion.id}; position-area: end; position-try-fallbacks: flip-block, flip-inline, flip-block flip-inline;`} popover>
                 {/* Comment Area */}
                 <div class="flex flex-col h-[100%]">
                     {/* Comments List Container */}

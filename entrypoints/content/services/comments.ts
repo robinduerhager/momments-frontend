@@ -1,5 +1,5 @@
 import axios from '$/utils/httpclient'
-import { UserDTO } from './';
+import { UserDTO, CommentModuleDTO } from './';
 
 export type CommentDTO = {
     id: number;
@@ -8,7 +8,7 @@ export type CommentDTO = {
     publishedAt: string;
     published: boolean;
     author: UserDTO
-    modules: any[]
+    modules: CommentModuleDTO[]
 }
 
 // TODO: Add the rest of the CommentModule properties
@@ -16,14 +16,10 @@ export type CommentDTO = {
 //     id: number;
 // }
 
-// TODO: Add the rest of the CommentModules
-export enum CommentModuleType {
-    TEXT = 'TEXT',
-    REFSONG = 'REFSONG'
-}
-
 // Create a Draft Comment on a Discussion
-const createDraft = async (discussionId: number) => (await axios.post(`/discussions/${discussionId}/comments`)).data
+const createDraft = async (discussionId: number) => (await axios.post(`/comments`, {
+    discussionId
+})).data
 // const getCommentsOfDiscussion = async (discussionId: number): Promise<CommentDTO[]> => (await axios.get('/comments', { params: { discussionId } })).data
 const getComment = async (commentId: number) => (await axios.get(`/comments/${commentId}`)).data
 
@@ -31,29 +27,8 @@ const publishComment = async (commentId: number) => (await axios.patch(`/comment
     published: true
 })).data
 
-// TODO: Implement the rest of the CommentModule types
-const createCommentTextModule = async ({commentId, type, content}: {
-    commentId: number;
-    type: CommentModuleType;
-    content: string;
-}) => (await axios.post(`/comments/${commentId}/modules`, {
-    type,
-    content
-})).data
-
-const createCommentRefSongModule = async ({commentId, type, content}: {
-    commentId: number;
-    type: CommentModuleType;
-    content: string;
-}) => (await axios.post(`/comments/${commentId}/modules`, {
-    type,
-    content
-})).data
-
 export default {
     createDraft,
     getComment,
     publishComment,
-    createCommentTextModule,
-    createCommentRefSongModule
 }
