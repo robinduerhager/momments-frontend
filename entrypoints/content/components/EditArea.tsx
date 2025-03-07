@@ -1,5 +1,5 @@
 import { discussions, setDiscussions } from '$/store'
-import { CommentService, CommentModuleType } from '$/services'
+import { CommentModuleType, CommentModulesService } from '$/services'
 import { createSignal } from 'solid-js'
 import { FaSolidArrowUp, FaRegularFaceSmile, FaBrandsSpotify, FaSolidMicrophone, FaSolidMusic, FaSolidXmark, FaSolidPaperPlane } from 'solid-icons/fa'
 import EmojiPicker from './EmojiPicker'
@@ -39,7 +39,7 @@ export const EditArea = (props: {
         if (!commentId)
             return console.error('Something went wrong')
 
-        const newModule = await CommentService.createCommentTextModule({
+        const newModule = await CommentModulesService.createCommentTextModule({
             commentId,
             type: CommentModuleType.TEXT,
             content: draftText()
@@ -80,7 +80,7 @@ export const EditArea = (props: {
                                 return console.error('Something went wrong')
                             }
                             // Create Spotify Module and close Modal
-                            const newRefSongModule = await CommentService.createCommentRefSongModule({
+                            const newRefSongModule = await CommentModulesService.createCommentRefSongModule({
                                 commentId,
                                 content: spotifyInput(),
                                 type: CommentModuleType.REFSONG
