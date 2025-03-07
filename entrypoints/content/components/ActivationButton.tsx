@@ -6,8 +6,6 @@ import { DiscussionService } from '$/services';
 export const ActivationButton = () => {
 
     const handleClick = async () => {
-        const discussions = await DiscussionService.getDiscussions()
-        setDiscussions('list', discussions)
         setMommentsStore('appActive', !mommentsStore.appActive)
     }
 

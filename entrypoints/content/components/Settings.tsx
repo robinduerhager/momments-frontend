@@ -28,7 +28,6 @@ export const Settings = () => {
                 user.avatar = userdto.avatar
                 user.name = userdto.name
             }))
-            console.log(userdto);
         }
     })
 

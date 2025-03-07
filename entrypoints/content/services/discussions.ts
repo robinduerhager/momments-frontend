@@ -9,10 +9,13 @@ export type DiscussionDTO = {
     comments: CommentDTO[]
     createdAt: Date;
     updatedAt: Date;
+    readBy: boolean;
 }
 
+type ReducedDiscussion = Omit<DiscussionDTO, 'comments' | 'readBy'> & { readBy: boolean }
+
 const createDiscussion = async (position: Position) => (await axios.post('/discussions', position)).data
-const getDiscussions = async () => (await axios.get('/discussions')).data
+const getDiscussions = async (): Promise<ReducedDiscussion[]> => (await axios.get('/discussions')).data
 
 // UserId will be appended automatically through the Token
 const getDiscussion = async (discussionId: number) => (await axios.get(`/discussions/${discussionId}`)).data

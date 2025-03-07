@@ -19,15 +19,14 @@ export const Discussion = (props: {
     const onToggleDiscussionPopover = async (event: ToggleEvent) => {
         // If popover has been opened: get all Comments for this Discussion
         if (event.newState === 'open') {
-            const completeDiscussion = await DiscussionService.getDiscussion(props.discussion.id,)
+            const completeDiscussion = await DiscussionService.getDiscussion(props.discussion.id)
+            
+            // set readBy to true in the discussion list
+            setDiscussions('list', discussion => discussion.id === props.discussion.id, 'readBy', true)
             setDiscussions('active', completeDiscussion)
         } else {
             setDiscussions('active', undefined)
         }
-
-        // if (event.newState === 'open') {
-        //     adjustScroll()
-        // }
     }
 
     const adjustScroll = () => {
@@ -78,9 +77,11 @@ export const Discussion = (props: {
         <>
             <button popoverTarget={`discussion-${props.discussion.id}-popover`} class="absolute" style={`anchor-name: --discussion-${props.discussion.id}; top: ${props.discussion.posY}px; left: ${props.discussion.posX}px;`}>
                 <FaSolidComment size={iconSize} color="#ffffff" />
-                <div class='w-[10px] h-[10px] rounded-full absolute bottom-0 right-0 bg-green-500'>
-                    <div class='discussion-awareness-animation'></div>
-                </div>
+                <Show when={!discussions.list.find(discussion => discussion.id === props.discussion.id)?.readBy}>
+                    <div class='w-[10px] h-[10px] rounded-full absolute bottom-0 right-0 bg-green-500'>
+                        <div class='discussion-awareness-animation'></div>
+                    </div>
+                </Show>
             </button>
             <div ref={popoverRef} id={`discussion-${props.discussion.id}-popover`} class="w-[330px] h-[400px] rounded-md border-solid border border-zinc-300 overflow-visible" style={`position-anchor: --discussion-${props.discussion.id}; position-area: end; position-try-fallbacks: flip-block, flip-inline, flip-block flip-inline;`} popover>
                 {/* Comment Area */}
