@@ -3,7 +3,7 @@ import { CommentModuleType, CommentModulesService } from '$/services'
 import { createSignal } from 'solid-js'
 import { FaSolidArrowUp, FaRegularFaceSmile, FaBrandsSpotify, FaSolidMicrophone, FaSolidMusic, FaSolidXmark, FaSolidPaperPlane } from 'solid-icons/fa'
 import EmojiPicker from './EmojiPicker'
-import { spotifyEmbedder } from '$/services/embedders'
+import { refSongEmbedder } from '$/services/embedders'
 
 export const EditArea = (props: {
     discussionId: number
@@ -72,7 +72,7 @@ export const EditArea = (props: {
                 <dialog ref={refSongModuleModal}>
                     <div class='flex gap-5'>
                         <input placeholder='Spotify Link' type="text" value={spotifyInput()} onInput={(e) => setSpotifyInput(e.target.value)} />
-                        <button disabled={!spotifyInput() || !spotifyEmbedder.validate(spotifyInput())} onClick={async () => {
+                        <button disabled={!spotifyInput() || !refSongEmbedder.validate(spotifyInput())} onClick={async () => {
                             const commentId = draftId()
 
                             if (!commentId) {
