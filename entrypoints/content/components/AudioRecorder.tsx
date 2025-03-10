@@ -1,21 +1,19 @@
-import { createSignal } from "solid-js"
-import { FaSolidMicrophone, FaSolidStop } from "solid-icons/fa"
+import { onCleanup, onMount } from 'solid-js'
+import { createSignal } from 'solid-js'
+import { FaSolidMicrophone, FaSolidStop, FaSolidUpload } from 'solid-icons/fa'
+import { mommentsStore } from '$/store'
 import Recorder from 'opus-recorder'
-import { mommentsStore } from "$/store"
 
-export const AudioRecorder = () => {
+export const AudioRecorder = (props: {
+    onModalShouldClose: () => void
+}) => {
     const encoderPath = 'https://cdn.jsdelivr.net/npm/opus-recorder/dist/encoderWorker.min.js'
-    // const waveEncoderPath = 'https://cdn.jsdelivr.net/npm/opus-recorder/dist/waveWorker.min.js'
 
     const [isRecording, setIsRecording] = createSignal(false)
     const [audioBlob, setAudioBlob] = createSignal<Blob | null>(null)
     const [recorder, setRecorder] = createSignal<any | null>(null)
-    let waveSurferRoot: HTMLDivElement | undefined = undefined
 
-    onMount(async () => {
-        // Request Microphone Access
-        // const devices = await navigator.mediaDevices.enumerateDevices()
-        // setAvailableDevices(devices.filter(device => device.kind === 'audioinput'))
+    onMount(() => {
         const opusRecorder = new Recorder({
             encoderPath: encoderPath,
             mediaTrackConstraints: {
@@ -28,6 +26,7 @@ export const AudioRecorder = () => {
             monitorGain: 0,
         })
 
+        // Set the audio blob when it has been returned from the recorder
         opusRecorder.ondataavailable = (buffer: ArrayBuffer) => {
             const blob = new Blob([buffer], { type: 'audio/ogg; codecs=opus' })
             setAudioBlob(blob)
@@ -36,50 +35,49 @@ export const AudioRecorder = () => {
         setRecorder(opusRecorder)
     })
 
-    // onCleanup(() => {
-    //     // waveSurferInstance()?.destroy()
-    //     // recorderPluginInstance()?.destroy()
-    // })
+    onCleanup(() => {
+        setAudioBlob(null)
+        setIsRecording(false)
+        setRecorder(null)
+    })
 
-    // createEffect(async () => {
-    //     if (availableDevices().length > 0 && mommentsStore.audioInputDevice) {
-    //         // Initialize new Opus Recorder, when selectedDevice changes
-    //         const opusRecorder = new OpusRecorder({
-    //             encoderPath: encoderPath,
-    //             mediaTrackConstraints: {
-    //                 deviceId: mommentsStore.audioInputDevice?.deviceId,
-    //                 echoCancellation: false,
-    //                 noiseSuppression: false,
-    //             },
-    //             numberOfChannels: 1,
-    //             recordingGain: 1,
-    //             monitorGain: 0,
-    //         })
+    const handleSaveRecording = () => {
+        if (!audioBlob())
+            return console.error('No audio blob to save')
 
-    //         opusRecorder.ondataavailable = (buffer: ArrayBuffer) => {
-    //             const blob = new Blob([buffer], { type: 'audio/ogg; codecs=opus' })
-    //             setAudioBlob(blob)
-    //         }
+        // Create a new AudioMessageModule AND a new AudioFile in the backend
+        // Backend returns an Upload URL for the audio file and the AudioMessageModule ID and AudioFile ID
 
-    //         setOpusRecorderInstance(opusRecorder)
-    //     }
-    // })
+        // 
+
+        // finally, close the modal
+        props.onModalShouldClose()
+    }
 
     return (
-        <div>
-            <div class="max-w-72" ref={waveSurferRoot}></div>
-            <button onClick={() => {
-                if (isRecording()) {
-                    recorder()?.stop()
-                    setIsRecording(false)
-                } else {
-                    recorder()?.start()
-                    setIsRecording(true)
-                }
-            }} class="button-primary bg-red-700 rounded-full">{isRecording() ? <FaSolidStop color="ffffff" size={18} /> : <FaSolidMicrophone color="ffffff" size={18} />}</button>
+        <div class="flex flex-col gap-5">
             <Show when={audioBlob()}>
-                <audio controls src={URL.createObjectURL(audioBlob()!)}></audio>
+                <div class="flex justify-center">
+                    <audio controls src={URL.createObjectURL(audioBlob()!)}></audio>
+                </div>
             </Show>
+            <div class="flex justify-center gap-3">
+                <button onClick={() => {
+                    if (isRecording()) {
+                        recorder()?.stop()
+                        setIsRecording(false)
+                    } else {
+                        recorder()?.start()
+                        setIsRecording(true)
+                    }
+                }} class={`flex justify-center items-center rounded-full w-10 h-10 ${isRecording() ? 'bg-red-500 text-white' : 'bg-zinc-200 text-zinc-700'}`}>{isRecording() ? <FaSolidStop size={18} /> : <FaSolidMicrophone size={18} />}
+                </button>
+                <Show when={audioBlob()}>
+                    <button class="flex justify-center items-center bg-green-600 rounded-full w-10 h-10" onClick={handleSaveRecording}>
+                        <FaSolidUpload size={18} />
+                    </button>
+                </Show>
+            </div>
         </div>
     )
 }

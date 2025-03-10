@@ -1,10 +1,10 @@
 import { discussions, mommentsStore, setDiscussions } from '$/store'
 import { CommentModuleType, CommentModulesService } from '$/services'
 import { createSignal } from 'solid-js'
-import { FaSolidArrowUp, FaRegularFaceSmile, FaBrandsSpotify, FaSolidMicrophone, FaSolidMusic, FaSolidXmark, FaSolidPaperPlane } from 'solid-icons/fa'
+import { FaSolidArrowUp, FaRegularFaceSmile, FaBrandsSpotify, FaSolidMicrophone, FaSolidMusic, FaSolidXmark, FaSolidPaperPlane, FaSolidX } from 'solid-icons/fa'
 import EmojiPicker from './EmojiPicker'
 import { refSongEmbedder } from '$/services/embedders'
-import { AudioRecorder } from '$/components'
+import { AudioRecorderModal } from '$/components'
 
 export const EditArea = (props: {
     discussionId: number
@@ -13,7 +13,6 @@ export const EditArea = (props: {
     const [showEmojiPicker, setShowEmojiPicker] = createSignal(false)
     const [spotifyInput, setSpotifyInput] = createSignal('')
     let refSongModuleModal: HTMLDialogElement | undefined;
-    let audioMessageModuleModal: HTMLDialogElement | undefined;
     let compositionModuleModal: HTMLDialogElement | undefined;
 
     const draftId = () => discussions.active?.comments.filter(comment => !comment.published)[0].id
@@ -62,15 +61,23 @@ export const EditArea = (props: {
                 <button class='button-primary' onClick={() => {
                     refSongModuleModal?.showModal()
                 }}><FaBrandsSpotify size={18} /></button>
-                <button class={`button-primary ${mommentsStore.audioInputDevice ? '' : 'disbaled'}`} onClick={() => {
-                    audioMessageModuleModal?.showModal()
-                }}><FaSolidMicrophone size={18} /></button>
+                <Show when={mommentsStore.audioInputDevice}>
+                    <AudioRecorderModal />
+                </Show>
                 <button class='button-primary' onClick={() => {
                     compositionModuleModal?.showModal()
                 }}><FaSolidMusic size={18} /></button>
 
                 {/* Spotify Modal */}
-                <dialog ref={refSongModuleModal}>
+                <dialog class='w-[45vw]' ref={refSongModuleModal}>
+                    <div class='flex mb-3'>
+                        <h1 class='font-bold grow'>Spotify Song Embedder</h1>
+                        <button onClick={() => {
+                            // empty spotify input and just close the Modal
+                            refSongModuleModal?.close()
+                            setSpotifyInput('')
+                        }}><FaSolidXmark size={18} /></button>
+                    </div>
                     <div class='flex gap-5'>
                         <input placeholder='Spotify Link' type="text" value={spotifyInput()} onInput={(e) => setSpotifyInput(e.target.value)} />
                         <button disabled={!spotifyInput() || !refSongEmbedder.validate(spotifyInput())} onClick={async () => {
@@ -94,24 +101,19 @@ export const EditArea = (props: {
                             refSongModuleModal?.close()
                             setSpotifyInput('')
                         }}><FaSolidPaperPlane size={18} /></button>
-                        <button onClick={() => {
-                            // empty spotify input and just close the Modal
-                            refSongModuleModal?.close()
-                            setSpotifyInput('')
-                        }}><FaSolidXmark size={18} /></button>
                     </div>
 
                 </dialog>
 
                 {/* Audio Module Modal */}
-                <dialog ref={audioMessageModuleModal}>
+                {/* <dialog class='min-w-80' ref={audioMessageModuleModal}>
+                    <div class='flex justify-end'><button onClick={() => {
+                        audioMessageModuleModal?.close()
+                    }}><FaSolidX size={18} /></button></div>
                     <Show when={mommentsStore.audioInputDevice}>
                         <AudioRecorder />
                     </Show>
-                    <button class="button-primary" onClick={() => {
-                        audioMessageModuleModal?.close()
-                    }}>Close Audio Message Modal</button>
-                </dialog>
+                </dialog> */}
 
                 {/* Composition Modal */}
                 <dialog ref={compositionModuleModal}>
