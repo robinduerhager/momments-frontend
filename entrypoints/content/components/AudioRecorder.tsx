@@ -1,75 +1,79 @@
 import { createSignal } from "solid-js"
 import { FaSolidMicrophone, FaSolidStop } from "solid-icons/fa"
-import WaveSurfer from "wavesurfer.js"
-import RecordPlugin from "wavesurfer.js/dist/plugins/record.js"
+import Recorder from 'opus-recorder'
+import { mommentsStore } from "$/store"
 
 export const AudioRecorder = () => {
+    const encoderPath = 'https://cdn.jsdelivr.net/npm/opus-recorder/dist/encoderWorker.min.js'
+    // const waveEncoderPath = 'https://cdn.jsdelivr.net/npm/opus-recorder/dist/waveWorker.min.js'
+
     const [isRecording, setIsRecording] = createSignal(false)
     const [audioBlob, setAudioBlob] = createSignal<Blob | null>(null)
-    const [waveSurferInstance, setWaveSurferInstance] = createSignal<WaveSurfer | null>(null)
-    const [recorderPluginInstance, setRecorderPluginInstance] = createSignal<RecordPlugin | null>(null)
-    const [availableDevices, setAvailableDevices] = createSignal<MediaDeviceInfo[]>([])
-    const [selectedDevice, setSelectedDevice] = createSignal<MediaDeviceInfo | null>(null)
+    const [recorder, setRecorder] = createSignal<any | null>(null)
     let waveSurferRoot: HTMLDivElement | undefined = undefined
 
     onMount(async () => {
         // Request Microphone Access
-        await navigator.mediaDevices.getUserMedia({ audio: true })
+        // const devices = await navigator.mediaDevices.enumerateDevices()
+        // setAvailableDevices(devices.filter(device => device.kind === 'audioinput'))
+        const opusRecorder = new Recorder({
+            encoderPath: encoderPath,
+            mediaTrackConstraints: {
+                deviceId: mommentsStore.audioInputDevice?.deviceId,
+                echoCancellation: false,
+                noiseSuppression: false,
+            },
+            numberOfChannels: 1,
+            recordingGain: 1,
+            monitorGain: 0,
+        })
 
-        if (waveSurferRoot){
-            const waveSurfer = WaveSurfer.create({
-                container: waveSurferRoot,
-                waveColor: 'violet',
-                progressColor: 'purple'
-            })
-
-            const record = waveSurfer.registerPlugin(
-                RecordPlugin.create({
-                  renderRecordedAudio: false,
-                  mimeType: 'audio/webm; codecs=opus',
-                  continuousWaveform: true,
-                  continuousWaveformDuration: 30, // optional
-                }),
-              )
-
-              setAvailableDevices(await RecordPlugin.getAvailableAudioDevices())
-              setWaveSurferInstance(waveSurfer)
-              setRecorderPluginInstance(record)
-
-              record.on('record-end', (blob: Blob) => {
-                setAudioBlob(blob)
-              })
+        opusRecorder.ondataavailable = (buffer: ArrayBuffer) => {
+            const blob = new Blob([buffer], { type: 'audio/ogg; codecs=opus' })
+            setAudioBlob(blob)
         }
+
+        setRecorder(opusRecorder)
     })
 
-    onCleanup(() => {
-        waveSurferInstance()?.destroy()
-        recorderPluginInstance()?.destroy()
-    })
+    // onCleanup(() => {
+    //     // waveSurferInstance()?.destroy()
+    //     // recorderPluginInstance()?.destroy()
+    // })
+
+    // createEffect(async () => {
+    //     if (availableDevices().length > 0 && mommentsStore.audioInputDevice) {
+    //         // Initialize new Opus Recorder, when selectedDevice changes
+    //         const opusRecorder = new OpusRecorder({
+    //             encoderPath: encoderPath,
+    //             mediaTrackConstraints: {
+    //                 deviceId: mommentsStore.audioInputDevice?.deviceId,
+    //                 echoCancellation: false,
+    //                 noiseSuppression: false,
+    //             },
+    //             numberOfChannels: 1,
+    //             recordingGain: 1,
+    //             monitorGain: 0,
+    //         })
+
+    //         opusRecorder.ondataavailable = (buffer: ArrayBuffer) => {
+    //             const blob = new Blob([buffer], { type: 'audio/ogg; codecs=opus' })
+    //             setAudioBlob(blob)
+    //         }
+
+    //         setOpusRecorderInstance(opusRecorder)
+    //     }
+    // })
 
     return (
         <div>
-            <select
-                value={selectedDevice()?.deviceId}
-                onInput={(e) => {
-                    const deviceId = e.currentTarget.value
-                    const selectedDevice = availableDevices().find(device => device.deviceId === deviceId) || null
-                    setSelectedDevice(selectedDevice)
-                }}
-            >
-                <For each={availableDevices()}>
-                {(device) => <option value={device.deviceId}>{device.label}</option>}
-                </For>
-            </select>
             <div class="max-w-72" ref={waveSurferRoot}></div>
             <button onClick={() => {
                 if (isRecording()) {
-                    recorderPluginInstance()?.stopRecording()
+                    recorder()?.stop()
                     setIsRecording(false)
                 } else {
-                    recorderPluginInstance()?.startRecording({
-                        deviceId: selectedDevice()?.deviceId
-                    })
+                    recorder()?.start()
                     setIsRecording(true)
                 }
             }} class="button-primary bg-red-700 rounded-full">{isRecording() ? <FaSolidStop color="ffffff" size={18} /> : <FaSolidMicrophone color="ffffff" size={18} />}</button>

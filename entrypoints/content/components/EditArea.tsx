@@ -1,4 +1,4 @@
-import { discussions, setDiscussions } from '$/store'
+import { discussions, mommentsStore, setDiscussions } from '$/store'
 import { CommentModuleType, CommentModulesService } from '$/services'
 import { createSignal } from 'solid-js'
 import { FaSolidArrowUp, FaRegularFaceSmile, FaBrandsSpotify, FaSolidMicrophone, FaSolidMusic, FaSolidXmark, FaSolidPaperPlane } from 'solid-icons/fa'
@@ -62,7 +62,7 @@ export const EditArea = (props: {
                 <button class='button-primary' onClick={() => {
                     refSongModuleModal?.showModal()
                 }}><FaBrandsSpotify size={18} /></button>
-                <button class='button-primary' onClick={() => {
+                <button class={`button-primary ${mommentsStore.audioInputDevice ? '' : 'disbaled'}`} onClick={() => {
                     audioMessageModuleModal?.showModal()
                 }}><FaSolidMicrophone size={18} /></button>
                 <button class='button-primary' onClick={() => {
@@ -105,7 +105,9 @@ export const EditArea = (props: {
 
                 {/* Audio Module Modal */}
                 <dialog ref={audioMessageModuleModal}>
-                    <AudioRecorder />
+                    <Show when={mommentsStore.audioInputDevice}>
+                        <AudioRecorder />
+                    </Show>
                     <button class="button-primary" onClick={() => {
                         audioMessageModuleModal?.close()
                     }}>Close Audio Message Modal</button>
