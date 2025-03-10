@@ -5,6 +5,7 @@ import { Avatar } from "./Avatar"
 
 export const Settings = () => {
     const [secret, setSecret] = createSignal('')
+    const [availableAudioInputDevices, setAvailableAudioInputDevices] = createSignal<MediaDeviceInfo[]>([])
 
     const handleLogin = async () => {
         const secretResponse = await UserService.login(secret())
@@ -28,6 +29,10 @@ export const Settings = () => {
                 user.avatar = userdto.avatar
                 user.name = userdto.name
             }))
+
+            // Fetch available audio input devices
+            const audioDevices = await navigator.mediaDevices.enumerateDevices()
+            setAvailableAudioInputDevices(audioDevices.filter(device => device.kind === 'audioinput'))
         }
     })
 
@@ -45,6 +50,21 @@ export const Settings = () => {
                                     <span class='font-semibold text-zinc-200'>{user.name}</span>
                                 </div>
                             </Show>
+                            <div class="flex flex-col gap-2.5">
+                                <h2 class="font-semibold">Select Audio Input Device</h2>
+                                <select
+                                    value={mommentsStore.audioInputDevice?.deviceId}
+                                    onInput={(e) => {
+                                        const deviceId = e.currentTarget.value
+                                        const selectedDevice = availableAudioInputDevices().find(device => device.deviceId === deviceId) || undefined
+                                        setMommentsStore('audioInputDevice', selectedDevice)
+                                    }}
+                                >
+                                    <For each={availableAudioInputDevices()}>
+                                        {(device) => <option value={device.deviceId}>{device.label}</option>}
+                                    </For>
+                                </select>
+                            </div>
                             <button class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium bg-red-700 text-zinc-200 shadow h-9 px-4 py-2" onClick={handleLogout}>Logout</button>
                         </Match>
                         {/* Show Login Button if logged out */}

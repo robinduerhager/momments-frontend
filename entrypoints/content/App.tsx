@@ -1,6 +1,6 @@
 import '@webcomponents/custom-elements';
 import { Show } from "solid-js";
-import { mommentsStore, discussions, setDiscussions, user } from '$/store';
+import { mommentsStore, discussions, setDiscussions, user, setMommentsStore } from '$/store';
 import { ActivationButton, SettingsButton, Discussion, DiscussionProxy, AddDiscussionButton, MommentsCanvas } from '$/components';
 import { DiscussionService } from '$/services';
 // import EmojiPicker from "./EmojiPicker";
@@ -23,7 +23,14 @@ function App() {
     true
   );
 
-  onMount(() => {
+  onMount(async () => {
+    // Request Audio Device Access on App load
+    await navigator.mediaDevices.getUserMedia({ audio: true })
+
+    // Immediately set the first audio input device as the default, so the app doesn't crash
+    const devices = await navigator.mediaDevices.enumerateDevices()
+    setMommentsStore('audioInputDevice', devices.filter(device => device.kind === 'audioinput')[0])
+
     discussionsFetchIntervalHandler = setInterval(async () => {
       if (user.token) {
         if (!discussions.list.length) {

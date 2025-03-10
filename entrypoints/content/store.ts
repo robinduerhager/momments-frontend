@@ -11,6 +11,7 @@ type MommentsStore = {
         list: Omit<DiscussionDTO, 'comments'>[]
         active?: DiscussionDTO
     }
+    audioInputDevice: MediaDeviceInfo | undefined
     appActive: boolean
     placeNewDiscussionMode: boolean
 }
@@ -25,6 +26,7 @@ export const [mommentsStore, setMommentsStore] = createStore<MommentsStore>({
         list: [],       // All the discussions that are available in the workspace
         active: undefined,     // The currently active discussion in the workspace
     },
+    audioInputDevice: undefined,
     appActive: false,    // Whether the Discussion Mode is active in the workspace
     placeNewDiscussionMode: false
   })
