@@ -74,7 +74,7 @@ function App() {
 
         }
       }
-    }, 10000)
+    }, 1000)
   })
 
   onCleanup(() => {

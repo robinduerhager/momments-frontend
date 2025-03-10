@@ -20,7 +20,6 @@ const extractId = (url: string) => {
 
 const validate = (url: string) => {
     const matches = urlRegex.test(url)
-    console.log(matches)
     return matches
 }
 
