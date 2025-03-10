@@ -20,7 +20,7 @@ export const Discussion = (props: {
         // If popover has been opened: get all Comments for this Discussion
         if (event.newState === 'open') {
             const completeDiscussion = await DiscussionService.getDiscussion(props.discussion.id)
-            
+
             // set readBy to true in the discussion list
             setDiscussions('list', discussion => discussion.id === props.discussion.id, 'readBy', true)
             setDiscussions('active', completeDiscussion)
@@ -67,10 +67,10 @@ export const Discussion = (props: {
     // the comment list length changes
     // or the modules length of the comment draft changes
     createEffect(() => {
-       discussions.active,
-       discussions.active?.comments.filter(comment => !comment.published)[0]?.modules?.length,
-       discussions.active?.comments.length
-       adjustScroll()
+        discussions.active,
+            discussions.active?.comments.filter(comment => !comment.published)[0]?.modules?.length,
+            discussions.active?.comments.length
+        adjustScroll()
     })
 
     return (
@@ -84,20 +84,22 @@ export const Discussion = (props: {
                 </Show>
             </button>
             <div ref={popoverRef} id={`discussion-${props.discussion.id}-popover`} class="w-[330px] h-[400px] rounded-md border-solid border border-zinc-300 overflow-visible" style={`position-anchor: --discussion-${props.discussion.id}; position-area: end; position-try-fallbacks: flip-block, flip-inline, flip-block flip-inline;`} popover>
-                {/* Comment Area */}
-                <div class="flex flex-col h-[100%]">
-                    {/* Comments List Container */}
-                    <div ref={commentsListRef} class='flex-grow overflow-y-auto commentsList'>
-                        <For each={discussions.active?.comments}>
-                            {(comment) => <Comment comment={comment} />}
-                        </For>
+                <Show when={discussions.active && discussions.active.id === props.discussion.id}>
+                    {/* Comment Area */}
+                    <div class="flex flex-col h-[100%]">
+                        {/* Comments List Container */}
+                        <div ref={commentsListRef} class='flex-grow overflow-y-auto commentsList'>
+                            <For each={discussions.active?.comments}>
+                                {(comment) => <Comment comment={comment} />}
+                            </For>
+                        </div>
+                        <div class="flex flex-col justify-center border-t border-t-zinc-300 p-3">
+                            <Show when={draftExists()} fallback={<button class="button-primary" onClick={handleDraftCreation}>Add Draft</button>}>
+                                <EditArea discussionId={props.discussion.id} />
+                            </Show>
+                        </div>
                     </div>
-                    <div class="flex flex-col justify-center border-t border-t-zinc-300 p-3">
-                        <Show when={draftExists()} fallback={<button class="button-primary" onClick={handleDraftCreation}>Add Draft</button>}>
-                            <EditArea discussionId={props.discussion.id} />
-                        </Show>
-                    </div>
-                </div>
+                </Show>
             </div>
         </>
     )

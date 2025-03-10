@@ -4,6 +4,7 @@ import { createSignal } from 'solid-js'
 import { FaSolidArrowUp, FaRegularFaceSmile, FaBrandsSpotify, FaSolidMicrophone, FaSolidMusic, FaSolidXmark, FaSolidPaperPlane } from 'solid-icons/fa'
 import EmojiPicker from './EmojiPicker'
 import { refSongEmbedder } from '$/services/embedders'
+import { AudioRecorder } from '$/components'
 
 export const EditArea = (props: {
     discussionId: number
@@ -104,6 +105,7 @@ export const EditArea = (props: {
 
                 {/* Audio Module Modal */}
                 <dialog ref={audioMessageModuleModal}>
+                    <AudioRecorder />
                     <button class="button-primary" onClick={() => {
                         audioMessageModuleModal?.close()
                     }}>Close Audio Message Modal</button>

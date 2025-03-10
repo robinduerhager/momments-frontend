@@ -7,4 +7,5 @@ export { Comment } from './Comment'
 export { EditArea } from './EditArea'
 export { Avatar } from './Avatar'
 export { DateDisplay } from './DateDisplay'
+export { AudioRecorder } from './AudioRecorder'
 
