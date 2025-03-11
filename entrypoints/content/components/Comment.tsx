@@ -1,6 +1,6 @@
 import { For } from 'solid-js'
 import { FaSolidTrash } from 'solid-icons/fa'
-import { CommentDTO, CommentModulesService, CommentService } from "$/services"
+import { CommentDTO, CommentModulesService, CommentModuleType, CommentService } from "$/services"
 import { Avatar, DateDisplay } from '$/components'
 import { PublishButton } from './PublishButton'
 import { setDiscussions } from '$/store'
@@ -56,11 +56,11 @@ export const Comment = (props: {
                 <li>published: {props.comment.published}</li>
                 <li>publishedAt: {props.comment.publishedAt}</li>
                 <li>updatedAt: {props.comment.updatedAt}</li> */}
-            {/* TODO Add Spotify, Audiomessage and Composition Types */}
+            {/* TODO Add Composition Type */}
             <div class='flex flex-col gap-1'>
                 <For each={props.comment.modules}>
                     {(module) => {
-                        if (module.type === 'TEXT') {
+                        if (module.type === CommentModuleType.TEXT) {
                             return (
                                 <div class={`${!props.comment.publishedAt ? 'flex pr-5 items-center' : 'flex items-center'}`}>
                                     <p class='grow'>{module.text!.content}</p>
@@ -71,7 +71,7 @@ export const Comment = (props: {
                                     </Show>
                                 </div>
                             )
-                        } else if (module.type === 'REFSONG') {
+                        } else if (module.type === CommentModuleType.REFSONG) {
                             return (
                                 <div class={`${!props.comment.publishedAt ? 'flex pr-5 items-center' : 'flex items-center'}`}>
                                     {refSongEmbedder.generate(module.refsong!.content)}
@@ -82,8 +82,18 @@ export const Comment = (props: {
                                     </Show>
                                 </div>
                             )
-                        }
-                        else {
+                        } else if (module.type === CommentModuleType.AUDIOMESSAGE) {
+                            return (
+                                <div class={`${!props.comment.publishedAt ? 'flex pr-5 items-center' : 'flex items-center'}`}>
+                                    <audio controls { ...{controlsList: "nodownload"} } class='grow' src={`${module.audio!.audioFile.fileName}`}></audio>
+                                    <Show when={!props.comment.publishedAt}>
+                                        <button onClick={() => handleModuleDelete(module.id)}>
+                                            <FaSolidTrash size={16} />
+                                        </button>
+                                    </Show>
+                                </div>
+                            )
+                        } else {
                             return <span>Unknown Module Type</span>
                         }
                     }}

@@ -62,7 +62,7 @@ export const EditArea = (props: {
                     refSongModuleModal?.showModal()
                 }}><FaBrandsSpotify size={18} /></button>
                 <Show when={mommentsStore.audioInputDevice}>
-                    <AudioRecorderModal />
+                    <AudioRecorderModal commentId={draftId()} />
                 </Show>
                 <button class='button-primary' onClick={() => {
                     compositionModuleModal?.showModal()
@@ -90,8 +90,7 @@ export const EditArea = (props: {
                             // Create Spotify Module and close Modal
                             const newRefSongModule = await CommentModulesService.createCommentRefSongModule({
                                 commentId,
-                                content: spotifyInput(),
-                                type: CommentModuleType.REFSONG
+                                content: spotifyInput()
                             })
 
                             if (!newRefSongModule)

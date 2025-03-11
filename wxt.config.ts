@@ -9,6 +9,12 @@ export default defineConfig({
   alias: {
     '$': path.resolve(__dirname, 'entrypoints/content'),
   },
+  manifest: {
+    name: 'Momments',
+    permissions: [
+      'audio'
+    ]
+  },
   vite: () => ({
     plugins: [tailwindcss()],
   }) as WxtViteConfig,

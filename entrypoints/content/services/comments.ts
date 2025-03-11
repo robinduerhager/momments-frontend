@@ -11,11 +11,6 @@ export type CommentDTO = {
     modules: CommentModuleDTO[]
 }
 
-// TODO: Add the rest of the CommentModule properties
-// export type CommentModuleDTO = {
-//     id: number;
-// }
-
 // Create a Draft Comment on a Discussion
 const createDraft = async (discussionId: number) => (await axios.post(`/comments`, {
     discussionId

@@ -67,9 +67,9 @@ export const Discussion = (props: {
     // the comment list length changes
     // or the modules length of the comment draft changes
     createEffect(() => {
-        discussions.active,
-            discussions.active?.comments.filter(comment => !comment.published)[0]?.modules?.length,
-            discussions.active?.comments.length
+        discussions.active
+        discussions.active?.comments.filter(comment => !comment.published)[0]?.modules?.length
+        discussions.active?.comments.length
         adjustScroll()
     })
 

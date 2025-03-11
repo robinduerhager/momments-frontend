@@ -6,12 +6,13 @@ import Recorder from 'opus-recorder'
 
 export const AudioRecorder = (props: {
     onModalShouldClose: () => void
+    onSaveClicked: (blob?: Blob) => void
 }) => {
     const encoderPath = 'https://cdn.jsdelivr.net/npm/opus-recorder/dist/encoderWorker.min.js'
 
     const [isRecording, setIsRecording] = createSignal(false)
-    const [audioBlob, setAudioBlob] = createSignal<Blob | null>(null)
-    const [recorder, setRecorder] = createSignal<any | null>(null)
+    const [audioBlob, setAudioBlob] = createSignal<Blob | undefined>(undefined)
+    const [recorder, setRecorder] = createSignal<any | undefined>(undefined)
 
     onMount(() => {
         const opusRecorder = new Recorder({
@@ -36,20 +37,14 @@ export const AudioRecorder = (props: {
     })
 
     onCleanup(() => {
-        setAudioBlob(null)
+        setAudioBlob(undefined)
         setIsRecording(false)
-        setRecorder(null)
+        setRecorder(undefined)
     })
 
     const handleSaveRecording = () => {
-        if (!audioBlob())
-            return console.error('No audio blob to save')
-
-        // Create a new AudioMessageModule AND a new AudioFile in the backend
-        // Backend returns an Upload URL for the audio file and the AudioMessageModule ID and AudioFile ID
-
-        // 
-
+        // save the audio blob
+        props.onSaveClicked(audioBlob())
         // finally, close the modal
         props.onModalShouldClose()
     }

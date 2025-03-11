@@ -1,10 +1,13 @@
 import { createSignal } from "solid-js"
 import { FaSolidMicrophone, FaSolidStop, FaSolidX, FaSolidUpload } from "solid-icons/fa"
 import Recorder from 'opus-recorder'
-import { mommentsStore } from "$/store"
+import { mommentsStore, setDiscussions } from "$/store"
 import { AudioRecorder } from "$/components"
+import { AudioFilesService, CommentModulesService } from "$/services"
 
-export const AudioRecorderModal = () => {
+export const AudioRecorderModal = (props: {
+    commentId?: number
+}) => {
     let audioRecorderModuleModal: HTMLDialogElement | undefined;
     const [isVisible, setIsVisible] = createSignal(false)
 
@@ -14,6 +17,29 @@ export const AudioRecorderModal = () => {
 
     const handleShow = () => {
         setIsVisible(true)
+    }
+
+    const handleAudioMessageSave = async (blob?: Blob) => {
+        if (!props.commentId)
+            return console.error('No commentId provided')
+
+        if (!blob)
+            return console.error("can't save audio message")
+
+        // Uploading the Blob will result in a random fileName which we can use to create a new AudioModule with an AudioFile
+        const fileName: string = await AudioFilesService.uploadAudioBlob(blob)
+
+        // Create a new AudioModule with the fileName
+        const audioMessageModule = await CommentModulesService.createCommentAudioMessageModule({
+            commentId: props.commentId,
+            audioFileName: fileName
+        })
+
+        if (!audioMessageModule)
+            return console.error('Failed to create audio message module')
+
+        // Append the new AudioModule to the active discussion
+        setDiscussions('active', 'comments', (comment) => comment.id === props.commentId, 'modules', (modules) => [...modules, audioMessageModule])
     }
 
     createEffect(() => {
@@ -44,7 +70,7 @@ export const AudioRecorderModal = () => {
 
                 {/* Signal helps in mounting and unmounting lifecycle with modals and popovers */}
                 <Show when={isVisible()}>
-                    <AudioRecorder onModalShouldClose={handleClose} />
+                    <AudioRecorder onModalShouldClose={handleClose} onSaveClicked={handleAudioMessageSave} />
                 </Show>
             </dialog>
         </>

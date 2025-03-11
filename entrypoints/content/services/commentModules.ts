@@ -1,9 +1,11 @@
 import axios from '$/utils/httpclient'
+import { AudioFile } from './audioFiles'
 
-// TODO: Add the rest of the CommentModules
+// TODO: Add Composition Module
 export enum CommentModuleType {
     TEXT = 'TEXT',
-    REFSONG = 'REFSONG'
+    REFSONG = 'REFSONG',
+    AUDIOMESSAGE = 'AUDIOMESSAGE'
 }
 
 export type CommentModuleDTO = {
@@ -12,6 +14,7 @@ export type CommentModuleDTO = {
     type: CommentModuleType
     text?: CommentTextModuleDTO
     refsong?: CommentRefSongModuleDTO
+    audio?: CommentAudioMessageModuleDTO
 }
 
 export type CommentTextModuleDTO = {
@@ -26,49 +29,39 @@ export type CommentRefSongModuleDTO = {
     content: string
 }
 
-// model CommentModule {
-//     id        Int         @id @default(autoincrement())
-//     commentId Int
-//     comment   Comment        @relation(fields: [commentId], references: [id])
-//     type      ModuleType
-//     text      TextModule?
-//     refsong   RefSongModule?
-//     // audio     AudioModule?
-//   }
-  
-//   model TextModule {
-//     id       Int @id @default(autoincrement())
-//     content  String // Text des Kommentars
-//     module   CommentModule? @relation(fields: [moduleId], references: [id])
-//     moduleId Int @unique
-//   }
-  
-//   model RefSongModule {
-//     id       Int @id @default(autoincrement())
-//     content  String //Refsong link
-//     module   CommentModule? @relation(fields: [moduleId], references: [id])
-//     moduleId Int @unique
-//   }
+export type CommentAudioMessageModuleDTO = {
+    id: number
+    moduleId: number
+    audioFile: AudioFile
+}
 
-// TODO: Implement the rest of the CommentModule types
-const createCommentTextModule = async ({ commentId, type, content }: {
+// TODO: Implement Composition Module
+const createCommentTextModule = async ({ commentId, content }: {
     commentId: number;
     type: CommentModuleType;
     content: string;
 }) => (await axios.post(`/modules`, {
     commentId,
-    type,
+    type: CommentModuleType.TEXT,
     content
 })).data
 
-const createCommentRefSongModule = async ({ commentId, type, content }: {
+const createCommentRefSongModule = async ({ commentId, content }: {
     commentId: number;
-    type: CommentModuleType;
     content: string;
 }) => (await axios.post(`/modules`, {
     commentId,
-    type,
+    type: CommentModuleType.REFSONG,
     content
+})).data
+
+const createCommentAudioMessageModule = async ({ commentId, audioFileName }: {
+    commentId: number;
+    audioFileName: string;
+}) => (await axios.post(`/modules`, {
+    commentId,
+    type: CommentModuleType.AUDIOMESSAGE,
+    audioFileName
 })).data
 
 const deleteModule = async (commentModuleId: number) => (await axios.delete(`/modules`, {
@@ -80,5 +73,6 @@ const deleteModule = async (commentModuleId: number) => (await axios.delete(`/mo
 export default {
     createCommentTextModule,
     createCommentRefSongModule,
+    createCommentAudioMessageModule,
     delete: deleteModule
 }

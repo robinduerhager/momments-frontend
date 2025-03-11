@@ -50,7 +50,7 @@ export const Settings = () => {
                                     <span class='font-semibold text-zinc-200'>{user.name}</span>
                                 </div>
                             </Show>
-                            <div class="flex flex-col gap-2.5">
+                            <div class="flex flex-col gap-2.5 mb-5 items-center">
                                 <h2 class="font-semibold">Select Audio Input Device</h2>
                                 <select
                                     value={mommentsStore.audioInputDevice?.deviceId}
