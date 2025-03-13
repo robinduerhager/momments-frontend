@@ -5,6 +5,7 @@ import { FaSolidArrowUp, FaRegularFaceSmile, FaBrandsSpotify, FaSolidMicrophone,
 import EmojiPicker from './EmojiPicker'
 import { refSongEmbedder } from '$/services/embedders'
 import { AudioRecorderModal } from '$/components'
+import { CompositionModal } from './CompositionModal'
 
 export const EditArea = (props: {
     discussionId: number
@@ -64,9 +65,12 @@ export const EditArea = (props: {
                 <Show when={mommentsStore.audioInputDevice}>
                     <AudioRecorderModal commentId={draftId()} />
                 </Show>
-                <button class='button-primary' onClick={() => {
+                <Show when={mommentsStore.audioInputDevice}>
+                    <CompositionModal commentId={draftId()} />
+                </Show>
+                {/* <button class='button-primary' onClick={() => {
                     compositionModuleModal?.showModal()
-                }}><FaSolidMusic size={18} /></button>
+                }}><FaSolidMusic size={18} /></button> */}
 
                 {/* Spotify Modal */}
                 <dialog class='w-[45vw]' ref={refSongModuleModal}>

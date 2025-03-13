@@ -3,7 +3,7 @@ import { render } from 'solid-js/web'
 import App from './App'
 
 export default defineContentScript({
-  matches: ['https://www.bandlab.com/studio*', 'https://www.google.de/'],
+  matches: ['https://www.bandlab.com/', 'https://www.google.de/'],
   // 2. Set cssInjectionMode
   cssInjectionMode: 'ui',
 

@@ -50,12 +50,6 @@ export const Comment = (props: {
                 </Show>
             </div>
 
-            {/* <li>author: {props.comment.author.id}</li>
-                <li>id: {props.comment.id}</li>
-                <li>createdAt: {props.comment.createdAt}</li>
-                <li>published: {props.comment.published}</li>
-                <li>publishedAt: {props.comment.publishedAt}</li>
-                <li>updatedAt: {props.comment.updatedAt}</li> */}
             {/* TODO Add Composition Type */}
             <div class='flex flex-col gap-1'>
                 <For each={props.comment.modules}>

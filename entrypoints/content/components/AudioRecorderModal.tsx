@@ -1,6 +1,5 @@
 import { createSignal } from "solid-js"
-import { FaSolidMicrophone, FaSolidStop, FaSolidX, FaSolidUpload } from "solid-icons/fa"
-import Recorder from 'opus-recorder'
+import { FaSolidMicrophone, FaSolidX } from "solid-icons/fa"
 import { mommentsStore, setDiscussions } from "$/store"
 import { AudioRecorder } from "$/components"
 import { AudioFilesService, CommentModulesService } from "$/services"
@@ -40,6 +39,7 @@ export const AudioRecorderModal = (props: {
 
         // Append the new AudioModule to the active discussion
         setDiscussions('active', 'comments', (comment) => comment.id === props.commentId, 'modules', (modules) => [...modules, audioMessageModule])
+        handleClose()
     }
 
     createEffect(() => {
@@ -70,7 +70,7 @@ export const AudioRecorderModal = (props: {
 
                 {/* Signal helps in mounting and unmounting lifecycle with modals and popovers */}
                 <Show when={isVisible()}>
-                    <AudioRecorder onModalShouldClose={handleClose} onSaveClicked={handleAudioMessageSave} />
+                    <AudioRecorder onSaveClicked={handleAudioMessageSave} />
                 </Show>
             </dialog>
         </>

@@ -5,8 +5,9 @@ import { mommentsStore } from '$/store'
 import Recorder from 'opus-recorder'
 
 export const AudioRecorder = (props: {
-    onModalShouldClose: () => void
     onSaveClicked: (blob?: Blob) => void
+    onRecord?: () => void
+    onStop?: () => void
 }) => {
     const encoderPath = 'https://cdn.jsdelivr.net/npm/opus-recorder/dist/encoderWorker.min.js'
 
@@ -45,12 +46,10 @@ export const AudioRecorder = (props: {
     const handleSaveRecording = () => {
         // save the audio blob
         props.onSaveClicked(audioBlob())
-        // finally, close the modal
-        props.onModalShouldClose()
     }
 
     return (
-        <div class="flex flex-col gap-5">
+        <div class="flex flex-col gap-5 grow">
             <Show when={audioBlob()}>
                 <div class="flex justify-center">
                     <audio controls src={URL.createObjectURL(audioBlob()!)}></audio>
@@ -60,9 +59,11 @@ export const AudioRecorder = (props: {
                 <button onClick={() => {
                     if (isRecording()) {
                         recorder()?.stop()
+                        props.onStop?.()
                         setIsRecording(false)
                     } else {
                         recorder()?.start()
+                        props.onRecord?.()
                         setIsRecording(true)
                     }
                 }} class={`flex justify-center items-center rounded-full w-10 h-10 ${isRecording() ? 'bg-red-500 text-white' : 'bg-zinc-200 text-zinc-700'}`}>{isRecording() ? <FaSolidStop size={18} /> : <FaSolidMicrophone size={18} />}

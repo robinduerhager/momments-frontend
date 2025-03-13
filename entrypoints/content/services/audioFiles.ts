@@ -20,6 +20,11 @@ const uploadAudioBlob = async (blob: Blob) => {
     return fileName
 }
 
+const create = async (fileName: string) => {
+    return (await axios.post('/audiofiles', { fileName })).data
+}
+
 export default {
-    uploadAudioBlob
+    uploadAudioBlob,
+    create
 }

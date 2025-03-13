@@ -9,4 +9,5 @@ export { Avatar } from './Avatar'
 export { DateDisplay } from './DateDisplay'
 export { AudioRecorderModal } from './AudioRecorderModal'
 export { AudioRecorder } from './AudioRecorder'
+export { CompositionEditor } from './CompositionEditor'
 
