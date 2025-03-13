@@ -37,6 +37,7 @@ export const CompositionModal = (props: {
 
         // Add the new CompositionModule to the active discussion
         setDiscussions('active', 'comments', (comment) => comment.id === props.commentId, 'modules', (modules) => [...modules, compositionModule])
+        handleClose()
     }
 
     createEffect(() => {

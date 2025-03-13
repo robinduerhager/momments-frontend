@@ -73,10 +73,6 @@ export const CompositionViewer = (props: {
         }
     }
 
-    createEffect(() => {
-        console.log(multitrack())
-    })
-
     const toggleMute = (idx: number, wasMuted: boolean) => {
         if (!multitrack())
             return console.error('No multitrack found')

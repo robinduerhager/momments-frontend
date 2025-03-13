@@ -12,8 +12,10 @@ export const AudioRecorder = (props: {
     const encoderPath = 'https://cdn.jsdelivr.net/npm/opus-recorder/dist/encoderWorker.min.js'
 
     const [isRecording, setIsRecording] = createSignal(false)
+    const [countdown, setCountdown] = createSignal(0)
     const [audioBlob, setAudioBlob] = createSignal<Blob | undefined>(undefined)
     const [recorder, setRecorder] = createSignal<any | undefined>(undefined)
+    let countdownInterval: NodeJS.Timeout | undefined
 
     onMount(() => {
         const opusRecorder = new Recorder({
@@ -41,7 +43,29 @@ export const AudioRecorder = (props: {
         setAudioBlob(undefined)
         setIsRecording(false)
         setRecorder(undefined)
+        clearInterval(countdownInterval)
     })
+
+    // Start the recording when 1 second is left (else the audio will be cut off a little)
+    createEffect(() => {
+        if (!isRecording() && countdown() === 1) {
+            recorder()?.start()
+            setIsRecording(true)
+        }
+    })
+
+    // The countdown also gives the user some time to prepare for the recording (e.g. grabbing the guitar and chords etc.)
+    const startRecordingAfterCountdown = (seconds: number) => {
+        setCountdown(seconds)
+        countdownInterval = setInterval(() => {
+            const newCountdown = countdown() - 1
+            setCountdown(newCountdown)
+            if (newCountdown === 0) {
+                props.onRecord?.()
+                return clearInterval(countdownInterval)
+            }
+        }, 1000)
+    }
 
     const handleSaveRecording = () => {
         // save the audio blob
@@ -62,11 +86,12 @@ export const AudioRecorder = (props: {
                         props.onStop?.()
                         setIsRecording(false)
                     } else {
-                        recorder()?.start()
-                        props.onRecord?.()
-                        setIsRecording(true)
+                        startRecordingAfterCountdown(4)
+                        // recorder()?.start()
+                        // props.onRecord?.()
+                        // setIsRecording(true)
                     }
-                }} class={`flex justify-center items-center rounded-full w-10 h-10 ${isRecording() ? 'bg-red-500 text-white' : 'bg-zinc-200 text-zinc-700'}`}>{isRecording() ? <FaSolidStop size={18} /> : <FaSolidMicrophone size={18} />}
+                }} class={`flex justify-center items-center rounded-full w-10 h-10 ${isRecording() ? 'bg-red-500 text-white' : 'bg-zinc-200 text-zinc-700'}`} disabled={countdown() > 0}>{countdown() > 0 ? countdown() : (isRecording() ? <FaSolidStop size={18} /> : <FaSolidMicrophone size={18} />)}
                 </button>
                 <Show when={audioBlob()}>
                     <button class="flex justify-center items-center bg-green-600 rounded-full w-10 h-10" onClick={handleSaveRecording}>
