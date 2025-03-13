@@ -91,7 +91,7 @@ export const AudioRecorder = (props: {
                         // props.onRecord?.()
                         // setIsRecording(true)
                     }
-                }} class={`flex justify-center items-center rounded-full w-10 h-10 ${isRecording() ? 'bg-red-500 text-white' : 'bg-zinc-200 text-zinc-700'}`} disabled={countdown() > 0}>{countdown() > 0 ? countdown() : (isRecording() ? <FaSolidStop size={18} /> : <FaSolidMicrophone size={18} />)}
+                }} class={`flex justify-center items-center rounded-full w-10 h-10 font-bold text-2xl ${isRecording() ? 'bg-red-500 text-white' : 'bg-zinc-200 text-zinc-700'}`} disabled={countdown() > 0}>{countdown() > 0 ? countdown() : (isRecording() ? <FaSolidStop size={18} /> : <FaSolidMicrophone size={18} />)}
                 </button>
                 <Show when={audioBlob()}>
                     <button class="flex justify-center items-center bg-green-600 rounded-full w-10 h-10" onClick={handleSaveRecording}>

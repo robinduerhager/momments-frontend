@@ -11,9 +11,6 @@ export default defineConfig({
   },
   manifest: {
     name: 'Momments',
-    permissions: [
-      'audio'
-    ]
   },
   vite: () => ({
     plugins: [tailwindcss()],
