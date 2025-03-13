@@ -1,10 +1,11 @@
 import { For } from 'solid-js'
 import { FaSolidTrash } from 'solid-icons/fa'
 import { CommentDTO, CommentModulesService, CommentModuleType, CommentService } from "$/services"
-import { Avatar, DateDisplay } from '$/components'
+import { Avatar, DateDisplay, CompositionViewer } from '$/components'
 import { PublishButton } from './PublishButton'
 import { setDiscussions } from '$/store'
 import { refSongEmbedder } from '$/services/embedders'
+import { CommentAudioMessageModuleDTO, CommentRefSongModuleDTO } from '$/services/commentModules'
 
 export const Comment = (props: {
     comment: CommentDTO
@@ -87,6 +88,10 @@ export const Comment = (props: {
                                     </Show>
                                 </div>
                             )
+                        } else if (module.type === CommentModuleType.COMPOSITION) {
+                            return (
+                            <CompositionViewer comment={props.comment} module={module} onDelete={(moduleId) => handleModuleDelete(moduleId)} />
+                        )
                         } else {
                             return <span>Unknown Module Type</span>
                         }

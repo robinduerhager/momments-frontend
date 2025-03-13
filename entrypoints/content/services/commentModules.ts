@@ -16,6 +16,7 @@ export type CommentModuleDTO = {
     text?: CommentTextModuleDTO
     refsong?: CommentRefSongModuleDTO
     audio?: CommentAudioMessageModuleDTO
+    composition?: CommentCompositionModuleDTO
 }
 
 export type CommentTextModuleDTO = {
@@ -33,6 +34,20 @@ export type CommentRefSongModuleDTO = {
 export type CommentAudioMessageModuleDTO = {
     id: number
     moduleId: number
+    audioFile: AudioFile
+}
+
+export type CommentCompositionModuleDTO = {
+    id: number
+    moduleId: number
+    audioTracks: AudioTracks[]
+}
+
+export type AudioTracks = {
+    id: number
+    startPosition: number,
+    startCue: number,
+    endCue: number
     audioFile: AudioFile
 }
 

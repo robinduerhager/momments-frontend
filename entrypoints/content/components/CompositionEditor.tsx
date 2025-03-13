@@ -1,4 +1,4 @@
-import { createSignal, onMount, onCleanup, For } from "solid-js";
+import { createSignal, onCleanup, For } from "solid-js";
 import { createStore } from "solid-js/store";
 import { FaSolidPlay, FaSolidPause, FaSolidTrash, FaSolidVolumeXmark, FaSolidVolumeHigh } from "solid-icons/fa";
 import { AudioRecorder } from "$/components"

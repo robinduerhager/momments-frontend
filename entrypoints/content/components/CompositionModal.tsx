@@ -32,7 +32,11 @@ export const CompositionModal = (props: {
             tracks
         })
 
-        console.log(compositionModule)
+        if (!compositionModule)
+            return console.error('Failed to create composition module')
+
+        // Add the new CompositionModule to the active discussion
+        setDiscussions('active', 'comments', (comment) => comment.id === props.commentId, 'modules', (modules) => [...modules, compositionModule])
     }
 
     createEffect(() => {
