@@ -5,7 +5,7 @@ import { AudioRecorder } from "$/components"
 import { AudioFilesService, CommentModulesService } from "$/services"
 
 export const AudioRecorderModal = (props: {
-    commentId?: number
+    commentId: number
 }) => {
     let audioRecorderModuleModal: HTMLDialogElement | undefined;
     const [isVisible, setIsVisible] = createSignal(false)
@@ -19,9 +19,6 @@ export const AudioRecorderModal = (props: {
     }
 
     const handleAudioMessageSave = async (blob?: Blob) => {
-        if (!props.commentId)
-            return console.error('No commentId provided')
-
         if (!blob)
             return console.error("can't save audio message")
 

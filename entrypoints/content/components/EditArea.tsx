@@ -62,15 +62,13 @@ export const EditArea = (props: {
                 <button class='button-primary' onClick={() => {
                     refSongModuleModal?.showModal()
                 }}><FaBrandsSpotify size={18} /></button>
+                {/* Edit Area will only be rendered, if a draft exists */}
                 <Show when={mommentsStore.audioInputDevice}>
-                    <AudioRecorderModal commentId={draftId()} />
+                    <AudioRecorderModal commentId={draftId()!} />
                 </Show>
                 <Show when={mommentsStore.audioInputDevice}>
-                    <CompositionModal commentId={draftId()} />
+                    <CompositionModal commentId={draftId()!} />
                 </Show>
-                {/* <button class='button-primary' onClick={() => {
-                    compositionModuleModal?.showModal()
-                }}><FaSolidMusic size={18} /></button> */}
 
                 {/* Spotify Modal */}
                 <dialog class='w-[45vw]' ref={refSongModuleModal}>

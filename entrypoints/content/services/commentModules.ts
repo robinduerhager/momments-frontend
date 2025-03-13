@@ -5,7 +5,8 @@ import { AudioFile } from './audioFiles'
 export enum CommentModuleType {
     TEXT = 'TEXT',
     REFSONG = 'REFSONG',
-    AUDIOMESSAGE = 'AUDIOMESSAGE'
+    AUDIOMESSAGE = 'AUDIOMESSAGE',
+    COMPOSITION = 'COMPOSITION'
 }
 
 export type CommentModuleDTO = {
@@ -64,6 +65,20 @@ const createCommentAudioMessageModule = async ({ commentId, audioFileName }: {
     audioFileName
 })).data
 
+const createCommendCompositionModule = async ({ commentId, tracks }: {
+    commentId: number
+    tracks: {
+        fileId: number
+        startPosition: number,
+        startCue: number,
+        endCue: number
+    }[]
+}) => (await axios.post('/modules', {
+    commentId,
+    type: CommentModuleType.COMPOSITION,
+    content: tracks
+})).data
+
 const deleteModule = async (commentModuleId: number) => (await axios.delete(`/modules`, {
     data: {
         commentModuleId
@@ -74,5 +89,6 @@ export default {
     createCommentTextModule,
     createCommentRefSongModule,
     createCommentAudioMessageModule,
+    createCommendCompositionModule,
     delete: deleteModule
 }

@@ -2,10 +2,10 @@ import { createSignal } from "solid-js"
 import { FaSolidX, FaSolidMusic } from "solid-icons/fa"
 import { mommentsStore, setDiscussions } from "$/store"
 import { CompositionEditor } from "$/components"
-import { AudioFilesService, CommentModulesService } from "$/services"
+import { CommentModulesService } from "$/services"
 
 export const CompositionModal = (props: {
-    commentId?: number
+    commentId: number
 }) => {
     let compositionModal: HTMLDialogElement | undefined;
     const [isVisible, setIsVisible] = createSignal(false)
@@ -27,8 +27,12 @@ export const CompositionModal = (props: {
     }[]) => {
         // Create new CompositionModule with the tracks which have to be linked to
         // the already uploaded AudioFiles (fileId)
+        const compositionModule = await CommentModulesService.createCommendCompositionModule({
+            commentId: props.commentId,
+            tracks
+        })
 
-        
+        console.log(compositionModule)
     }
 
     createEffect(() => {

@@ -57,28 +57,25 @@ function App() {
             }
           }
 
-          const unreadDiscussions = dbDiscussions.filter(dbDisc => !dbDisc.readBy)
-          const updateableReadDiscussionIndices = []
+          // For the awareness feature, we have to update the readBy property of every discussion
+          // If we set a new array of discussions, the popovers will rerender as well
 
-          for (const readDiscussion of unreadDiscussions) {
-            const idx = discussions.list.findIndex((discussion) => discussion.id === readDiscussion.id)
-            if (idx)
+          // First get all (from the db marked) now unread Discussions
+          const unreadDiscussions = dbDiscussions.filter(dbDisc => !dbDisc.readBy)
+          const updateableReadDiscussionIndices: number[] = []
+
+          // Find the indices of the now unread discussions in the local discussion store
+          // and keep an index array of the discussions which should be now marked by the awareness feature
+          for (const unreadDiscussion of unreadDiscussions) {
+            const idx = discussions.list.findIndex((discussion) => discussion.id === unreadDiscussion.id)
+            if (idx !== -1)
               updateableReadDiscussionIndices.push(idx)
           }
 
+          // apply the readBy update so the awareness feature will be shown
           if (updateableReadDiscussionIndices.length > 0) {
             setDiscussions('list', updateableReadDiscussionIndices, 'readBy', false)
           }
-
-          // update the readBy property for all discussions
-          // setDiscussions('list', (discussionsList) => {
-          //   discussionsList.forEach((discussion) => {
-          //     const dbDiscussion = dbDiscussions.find(dbDisc => dbDisc.id === discussion.id)
-          //     discussion.readBy = dbDiscussion!.readBy
-          //   })
-          //   return discussionsList
-          // })
-
         }
       }
     }, 1000)
