@@ -24,6 +24,13 @@ function App() {
   );
 
   onMount(async () => {
+    const hideRemoteCursorStyle = document.createElement('style')
+    hideRemoteCursorStyle.innerHTML = `
+    .mix-editor-collaborator-cursor {
+      visibility: hidden !important;
+    }
+    `
+    document.head.appendChild(hideRemoteCursorStyle)
     // Request Audio Device Access on App load
     await navigator.mediaDevices.getUserMedia({ audio: true })
 
@@ -78,7 +85,15 @@ function App() {
           }
         }
       }
-    }, 1000)
+    }, 1000 * 60) // 1 Minute delay for updating the locally stored discussions
+  })
+
+  createEffect(async () => {
+    // Init fetch on Login (so the users don't have to wait a minute to see any discussions)
+    if (user.token) {
+      const dbDiscussions = await DiscussionService.getDiscussions()
+      setDiscussions('list', dbDiscussions)
+    }
   })
 
   onCleanup(() => {
