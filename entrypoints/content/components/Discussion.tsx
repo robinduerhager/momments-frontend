@@ -70,6 +70,9 @@ export const Discussion = (props: {
         discussions.active
         discussions.active?.comments.filter(comment => !comment.published)[0]?.modules?.length
         discussions.active?.comments.length
+        if (discussions.active) {
+            console.log('clicked discussion ID: ', discussions.active.id)
+        }
         adjustScroll()
     })
 
