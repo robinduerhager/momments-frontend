@@ -6,7 +6,6 @@ import { Avatar } from "./Avatar"
 
 export const Settings = () => {
     const [secret, setSecret] = createSignal('')
-    const [isOpen, setIsOpen] = createSignal(false)
     const [availableAudioInputDevices, setAvailableAudioInputDevices] = createSignal<MediaDeviceInfo[]>([])
     let popoverRef: HTMLDivElement | undefined
 
@@ -26,9 +25,9 @@ export const Settings = () => {
 
     const handlePopoverToggle = (e: Event) => {
         if ((e as ToggleEvent).newState === 'open') {
-            setIsOpen(true)
+            setMommentsStore('settingsOpened', true)
         } else {
-            setIsOpen(false)
+            setMommentsStore('settingsOpened', false)
         }
     }
 
@@ -56,7 +55,7 @@ export const Settings = () => {
     })
 
     createEffect(() => {
-        if (isOpen()) {
+        if (mommentsStore.settingsOpened) {
             keyblocker.setup()
         } else {
             if (!mommentsStore.appActive) {

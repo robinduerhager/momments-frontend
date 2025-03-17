@@ -12,7 +12,8 @@ type MommentsStore = {
         active?: DiscussionDTO
     }
     audioInputDevice: MediaDeviceInfo | undefined
-    appActive: boolean
+    appActive: boolean,
+    settingsOpened: boolean,
     placeNewDiscussionMode: boolean
 }
 
@@ -28,6 +29,7 @@ export const [mommentsStore, setMommentsStore] = createStore<MommentsStore>({
     },
     audioInputDevice: undefined,
     appActive: false,    // Whether the Discussion Mode is active in the workspace
+    settingsOpened: false,  // Whether the settings popover is opened
     placeNewDiscussionMode: false
   })
 

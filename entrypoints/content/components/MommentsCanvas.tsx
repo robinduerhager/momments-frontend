@@ -1,5 +1,6 @@
 import { onMount, onCleanup } from "solid-js"
 import keyblocker from "$/utils/keyblocker"
+import { mommentsStore } from "$/store"
 
 export const MommentsCanvas = () => {
     const borderWidth = 5
@@ -13,7 +14,8 @@ export const MommentsCanvas = () => {
     })
 
     onCleanup(() => {
-        keyblocker.remove()
+        if (!mommentsStore.settingsOpened)
+            keyblocker.remove()
     })
 
     // style={`left: calc(50% - ${labelWidth / 2}px);`}
