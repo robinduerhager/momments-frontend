@@ -1,35 +1,22 @@
 import '@webcomponents/custom-elements';
 import { Show } from "solid-js";
+import keyblocker from "$/utils/keyblocker"
 import { mommentsStore, discussions, setDiscussions, user, setMommentsStore } from '$/store';
 import { ActivationButton, SettingsButton, Discussion, DiscussionProxy, AddDiscussionButton, MommentsCanvas } from '$/components';
 import { DiscussionService } from '$/services';
-// import EmojiPicker from "./EmojiPicker";
-// import { Picker } from 'emoji-mart'
-// import data from '@emoji-mart/data'
-// import Playlist from './components/Playlist';
 
 function App() {
   let discussionsFetchIntervalHandler: NodeJS.Timeout | undefined
-  // TODO can i add eventlistener to shadowroot???
-  // props.shadowRoot.addEventListener('keydown', (event) => {
-  //   console.log(event)
-  // })
-  // Blocks Shortcuts in BandLab (This is the BandLab body, not the chrome Extension body)
-  document.querySelector('body')?.addEventListener(
-    'keydown',
-    (event) => {
-      event.stopImmediatePropagation();
-    },
-    true
-  );
 
   onMount(async () => {
     const hideRemoteCursorStyle = document.createElement('style')
+    // Hide any comment and discussion related elements from Soundtrap
     hideRemoteCursorStyle.innerHTML = `
-    .mix-editor-collaborator-cursor {
-      visibility: hidden !important;
+    .discussionstab, .comment-anchor, .timeline-add-discussion-thread-button, ul[role=menu]>li:nth-child(4) {
+      display: none !important;
     }
     `
+    
     document.head.appendChild(hideRemoteCursorStyle)
     // Request Audio Device Access on App load
     await navigator.mediaDevices.getUserMedia({ audio: true })
@@ -88,6 +75,21 @@ function App() {
     }, 1000 * 60) // 1 Minute delay for updating the locally stored discussions
   })
 
+//   const blockKeydown = (event: KeyboardEvent) => {
+//     event.stopPropagation();
+//     event.stopImmediatePropagation();
+// }
+
+  // createEffect(() => {
+  //   if (mommentsStore.appActive) {
+  //     document.addEventListener('keydown', blockKeydown, true)
+  //     window.addEventListener('keydown', blockKeydown, true)
+  //   } else {
+  //     document.removeEventListener('keydown', blockKeydown, true)
+  //     window.removeEventListener('keydown', blockKeydown, true)
+  //   }
+  // })
+
   createEffect(async () => {
     // Init fetch on Login (so the users don't have to wait a minute to see any discussions)
     if (user.token) {
@@ -119,7 +121,7 @@ function App() {
       </Show>
 
       {/* Momments Activator Button */}
-      <div class='absolute bottom-5 w-full justify-center flex gap-5 items-center' style={`pointer-events: none;`}>
+      <div class='absolute bottom-10 w-full justify-center flex gap-5 items-center' style={`pointer-events: none;`}>
         <SettingsButton />
         <Show when={mommentsStore.appActive}>
           <AddDiscussionButton />

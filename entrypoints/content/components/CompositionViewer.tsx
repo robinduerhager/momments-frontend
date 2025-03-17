@@ -82,14 +82,15 @@ export const CompositionViewer = (props: {
     }
 
     return (
-        <div>
+        <div class="w-full">
             <button onClick={handleTogglePlayButton}>
                 <Show when={!isPlaying()} fallback={<FaSolidPause size={18} />}>
                     <FaSolidPlay size={18} />
                 </Show>
             </button>
-            <div class={`${!props.comment.publishedAt ? 'flex pr-4 items-center' : 'flex items-center'}`}>
-                <div class="flex flex-col mr-2">
+            {/* <div class={`${!props.comment.publishedAt ? 'flex pr-5 items-center' : 'flex pr-5 items-center'}`}> */}
+            <div class="flex pr-5 items-center">
+                <div class="flex flex-col">
                     <For each={mutedTracks}>
                         {(muted, idx) => (
                             <div style={`height: ${trackHeight + 2}px;`}>

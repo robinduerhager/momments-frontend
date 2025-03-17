@@ -83,10 +83,10 @@ export const Discussion = (props: {
                     </div>
                 </Show>
             </button>
-            <div ref={popoverRef} id={`discussion-${props.discussion.id}-popover`} class="w-[350px] h-[45vh] rounded-md border-solid border border-zinc-300 overflow-visible" style={`position-anchor: --discussion-${props.discussion.id}; position-area: end; position-try-fallbacks: flip-block, flip-inline, flip-block flip-inline;`} popover>
+            <div ref={popoverRef} id={`discussion-${props.discussion.id}-popover`} class="w-[350px] h-[45vh] bg-zinc-950 rounded-md border-solid border border-zinc-200 overflow-visible" style={`position-anchor: --discussion-${props.discussion.id}; position-area: end; position-try-fallbacks: flip-block, flip-inline, flip-block flip-inline;`} popover>
                 <Show when={discussions.active && discussions.active.id === props.discussion.id}>
                     {/* Comment Area */}
-                    <div class="flex flex-col h-[100%]">
+                    <div class="flex flex-col h-[100%] bg-zinc-950 text-white">
                         {/* Comments List Container */}
                         <div ref={commentsListRef} class='flex-grow overflow-y-auto commentsList'>
                             <For each={discussions.active?.comments}>

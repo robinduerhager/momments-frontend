@@ -1,11 +1,14 @@
 import { createSignal, Match, Switch } from "solid-js"
 import { mommentsStore, setMommentsStore, user, setUser } from "$/store"
 import { UserService } from "$/services"
+import keyblocker from "$/utils/keyblocker"
 import { Avatar } from "./Avatar"
 
 export const Settings = () => {
     const [secret, setSecret] = createSignal('')
+    const [isOpen, setIsOpen] = createSignal(false)
     const [availableAudioInputDevices, setAvailableAudioInputDevices] = createSignal<MediaDeviceInfo[]>([])
+    let popoverRef: HTMLDivElement | undefined
 
     const handleLogin = async () => {
         const secretResponse = await UserService.login(secret())
@@ -19,6 +22,14 @@ export const Settings = () => {
     const handleLogout = () => {
         setUser('token', '')
         setMommentsStore('appActive', false)
+    }
+
+    const handlePopoverToggle = (e: Event) => {
+        if ((e as ToggleEvent).newState === 'open') {
+            setIsOpen(true)
+        } else {
+            setIsOpen(false)
+        }
     }
 
     createEffect(async () => {
@@ -36,13 +47,32 @@ export const Settings = () => {
         }
     })
 
+    onMount(() => {
+        popoverRef?.addEventListener('toggle', handlePopoverToggle)
+    })
+    
+    onCleanup(() => {
+        popoverRef?.removeEventListener('toggle', handlePopoverToggle)
+    })
+
+    createEffect(() => {
+        if (isOpen()) {
+            keyblocker.setup()
+        } else {
+            if (!mommentsStore.appActive) {
+                console.log('cleanup settings');
+                keyblocker.remove()
+            }
+        }
+    })
+
     return (
         <>
-            <div popover id="settings-popover" class="bg-zinc-950 w-[320px] mb-3 rounded-md border border-solid border-zinc-200" style={`position-area: top; position-anchor: --settings-button;`}>
+            <div popover ref={popoverRef} id="settings-popover" class="bg-zinc-950 w-[320px] mb-3 rounded-md border border-solid border-zinc-200" style={`position-area: top; position-anchor: --settings-button;`}>
                 <div class="p-3 flex flex-col items-center">
                     <Switch>
                         <Match when={user.token}>
-                            <h1 class="font-bold">Logged in as</h1>
+                            <h1 class="font-bold text-white">Logged in as</h1>
                             {/* Show Logout Button and loggend in user if logged in */}
                             <Show when={user.avatar && user.name}>
                                 <div class='flex gap-2.5 my-5 items-center'>
@@ -51,8 +81,9 @@ export const Settings = () => {
                                 </div>
                             </Show>
                             <div class="flex flex-col gap-2.5 mb-5 items-center">
-                                <h2 class="font-semibold">Select Audio Input Device</h2>
+                                <h2 class="font-semibold text-white">Select Audio Input Device</h2>
                                 <select
+                                    class="text-white"
                                     value={mommentsStore.audioInputDevice?.deviceId}
                                     onInput={(e) => {
                                         const deviceId = e.currentTarget.value

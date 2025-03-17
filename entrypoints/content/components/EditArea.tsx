@@ -123,7 +123,7 @@ export const EditArea = (props: {
                     }}>Close Composition Modal</button>
                 </dialog>
             </div>
-            <div class="flex p-2 border-solid border-zinc-300 border rounded-md">
+            <div class="flex p-2 border-solid border-zinc-200 border rounded-md">
                 <textarea class='grow mr-2.5' style={`resize: none;`} onInput={(e) => { setDraftText(e.target.value) }} value={draftText()}></textarea>
                 <div class='flex flex-col gap-2.5'>
                     <button onClick={appendTextModule}>

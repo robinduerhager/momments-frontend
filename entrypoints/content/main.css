@@ -75,6 +75,7 @@ input {
 .comment {
   @apply border-b;
   @apply border-zinc-200;
+  @apply bg-zinc-950;
   @apply my-4;
   @apply px-3;
   @apply pb-3;
@@ -97,6 +98,8 @@ dialog {
   @apply p-5;
   @apply border;
   @apply border-zinc-200;
+  @apply bg-zinc-950;
+  @apply text-white;
   @apply rounded-md;
 }
 
