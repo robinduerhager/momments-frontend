@@ -15,8 +15,6 @@ export type CommentDTO = {
 const createDraft = async (discussionId: number) => (await axios.post(`/comments`, {
     discussionId
 })).data
-// const getCommentsOfDiscussion = async (discussionId: number): Promise<CommentDTO[]> => (await axios.get('/comments', { params: { discussionId } })).data
-const getComment = async (commentId: number) => (await axios.get(`/comments/${commentId}`)).data
 
 const publishComment = async (commentId: number) => (await axios.patch(`/comments/${commentId}`, {
     published: true
@@ -24,6 +22,5 @@ const publishComment = async (commentId: number) => (await axios.patch(`/comment
 
 export default {
     createDraft,
-    getComment,
     publishComment,
 }

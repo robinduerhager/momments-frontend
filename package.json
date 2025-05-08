@@ -18,7 +18,6 @@
     "@emoji-mart/data": "^1.2.1",
     "@tailwindcss/vite": "^4.0.7",
     "@webcomponents/custom-elements": "^1.6.0",
-    "audiobuffer-to-wav": "^1.0.0",
     "axios": "^1.8.1",
     "emoji-mart": "^5.6.0",
     "opus-recorder": "^8.0.5",

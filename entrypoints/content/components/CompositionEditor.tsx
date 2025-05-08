@@ -1,9 +1,9 @@
 import { createSignal, onCleanup, For } from "solid-js";
 import { createStore } from "solid-js/store";
-import { FaSolidPlay, FaSolidPause, FaSolidTrash, FaSolidVolumeXmark, FaSolidVolumeHigh } from "solid-icons/fa";
+import { FaSolidPlay, FaSolidPause, FaSolidTrash, FaSolidVolumeHigh } from "solid-icons/fa";
 import { AudioRecorder } from "$/components"
 import { AudioFilesService } from "$/services";
-import WavesurferMultitrack, { MultitrackTracks, MultitrackOptions } from 'wavesurfer-multitrack';
+import WavesurferMultitrack, { MultitrackTracks } from 'wavesurfer-multitrack';
 
 export const CompositionEditor = (props: {
     onSave: (tracks: any) => void

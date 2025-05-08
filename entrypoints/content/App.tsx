@@ -1,6 +1,5 @@
 import '@webcomponents/custom-elements';
 import { Show } from "solid-js";
-import keyblocker from "$/utils/keyblocker"
 import { mommentsStore, discussions, setDiscussions, user, setMommentsStore } from '$/store';
 import { ActivationButton, SettingsButton, Discussion, DiscussionProxy, AddDiscussionButton, MommentsCanvas } from '$/components';
 import { DiscussionService } from '$/services';
@@ -104,7 +103,6 @@ function App() {
 
   return (
     <>
-      {/* <Playlist /> */}
       {/* <div ref={emojiref}></div> */}
       {/* <EmojiPicker data={data} /> */}
       {/* Momments Comments Canvas */}
