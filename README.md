@@ -12,7 +12,7 @@ Dieses Projekt enthält jeglichen Quellcode für das Frontend des Momments-Proto
    3. und gehe in den Branch `momments-patches` per `git checkout momments-patches`
    4. Installiere die NodeJS Module (Verwendet wurde NodeJS 22.11.0) per `npm install`
    5. Führe `npm run build` aus, um einbindbare JavaScript Module zu erhalten
-4. Kopiere `example.env` in `.env`
+4. Kopiere `example.env` in `.env` (Hier sollte die API URL und der Port mit dem von `momments-backend` überprüft werden)
 5. Führe `npm install` in `momments-frontend` aus, um alle nötigen NodeJS Module zu installieren
 6. Führe `npm run dev` aus und prüfe auf [Google](https://www.google.com/), ob das Projekt funktioniert (Wenn das Backend nicht gleichzeitig läuft, kann man sich nicht anmelden)
 
