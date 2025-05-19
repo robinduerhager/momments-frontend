@@ -1,5 +1,5 @@
 # Momments-Frontend
-Dieses Projekt enthält jeglichen Quellcode für den Momments Prototypen der Masterarbeit von Robin Dürhager mit dem Titel `Konzeption multimodaler Kommunikationsmöglichkeiten zum Austausch zwischen Musikern beim zeit- und ortsunabhängigen, kollaborativen Komponieren`. Damit dieses Projekt verwendet werden kann, muss ebenfalls das Projekt `momments-backend` konfiguriert und gestartet werden.
+Dieses Projekt enthält jeglichen Quellcode für das Frontend des Momments-Prototypen der Masterarbeit von Robin Dürhager mit dem Titel `Konzeption multimodaler Kommunikationsmöglichkeiten zum Austausch zwischen Musikern beim zeit- und ortsunabhängigen, kollaborativen Komponieren`. Damit dieses Projekt verwendet werden kann, muss ebenfalls das Projekt `momments-backend` konfiguriert und gestartet werden.
 
 > **Hinweis:** Zum Betrieb ist zusätzlich das Projekt `momments-backend` in dieser Abgabe erforderlich.
 
@@ -19,7 +19,7 @@ Dieses Projekt enthält jeglichen Quellcode für den Momments Prototypen der Mas
 Sobald Schritt 6 ausgeführt wurde, sollte sich eine Google Chrome Instanz öffnen, welche die Browsererweiterung beinhaltet. Im Entwicklungsmodus wird die Erweiterung auf `https://www.soundtrap.com/studio/*` und `https://www.google.de/*` aktiviert. Wenn die Erweiterung über `npm run build` für die Produktion gebaut wurde, wird die Erweiterung nur bei `https://www.soundtrap.com/studio/*` aktiviert. Die Liste dieser URLs kann in `entrypoints/content/index.tsx` angepasst werden.
 
 ## Projektstruktur
-Im Folgenden wird die Ordnerstruktur dargestellt und über Kommentare kurz und prägnant erläutert. Dabei wird nicht auf Ordner in der Projektstruktur eingegangen, die nicht für das Projekt aktiv verwendet wurden. Beispielsweise wurden `assets` und `public` nicht für die Entwicklung des Projekts benötigt aber vollständigkeitshalber nicht aus dem Projekt entfernt.
+Im Folgenden wird die Ordnerstruktur dargestellt und über Kommentare kurz und prägnant erläutert. Dabei wird nicht auf Ordner in der Projektstruktur eingegangen, die nicht für das Projekt aktiv verwendet wurden. Beispielsweise wurden `assets` und `public` nicht für die Entwicklung des Projekts benötigt aber vollständigkeitshalber nicht aus dem Projekt entfernt. Weitere Dateien, wie die `package*.json` Dateien und diese `README.md` Datei wurden aus Platzgründen ausgelassen. Die `package.json` definiert dieses NodeJS Projekt und stellt beispielsweise alle verwendeten Bibliotheken und ihre Versionen dar.
 
 ```bash
 momments-frontend/
