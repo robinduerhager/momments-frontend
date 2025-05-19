@@ -1,6 +1,8 @@
 # Momments-Frontend
 Dieses Projekt enthält jeglichen Quellcode für den Momments Prototypen der Masterarbeit von Robin Dürhager mit dem Titel `Konzeption multimodaler Kommunikationsmöglichkeiten zum Austausch zwischen Musikern beim zeit- und ortsunabhängigen, kollaborativen Komponieren`. Damit dieses Projekt verwendet werden kann, muss ebenfalls das Projekt `momments-backend` konfiguriert und gestartet werden.
 
+> **Hinweis:** Zum Betrieb ist zusätzlich das Projekt `momments-backend` in dieser Abgabe erforderlich.
+
 ## Aufsetzen des Projekts
 1. Kopiere dieses Projekt in einen Ordner deiner Wahl
 2. Gehe in das Projekt per `cd momments-frontend`
@@ -15,6 +17,28 @@ Dieses Projekt enthält jeglichen Quellcode für den Momments Prototypen der Mas
 6. Führe `npm run dev` aus und prüfe auf [Google](https://www.google.com/), ob das Projekt funktioniert (Wenn das Backend nicht gleichzeitig läuft, kann man sich nicht anmelden)
 
 Sobald Schritt 6 ausgeführt wurde, sollte sich eine Google Chrome Instanz öffnen, welche die Browsererweiterung beinhaltet. Im Entwicklungsmodus wird die Erweiterung auf `https://www.soundtrap.com/studio/*` und `https://www.google.de/*` aktiviert. Wenn die Erweiterung über `npm run build` für die Produktion gebaut wurde, wird die Erweiterung nur bei `https://www.soundtrap.com/studio/*` aktiviert. Die Liste dieser URLs kann in `entrypoints/content/index.tsx` angepasst werden.
+
+## Projektstruktur
+Im Folgenden wird die Ordnerstruktur dargestellt und über Kommentare kurz und prägnant erläutert. Dabei wird nicht auf Ordner in der Projektstruktur eingegangen, die nicht für das Projekt aktiv verwendet wurden. Beispielsweise wurden `assets` und `public` nicht für die Entwicklung des Projekts benötigt aber vollständigkeitshalber nicht aus dem Projekt entfernt.
+
+```bash
+momments-frontend/
+├── entrypoints         # Jeglicher Projektcode für die Extension
+│   └── content         # Eingangspunkt für content-scripts
+│       ├── index.tsx   # Injektion des restlichen Codes des Momments Projekts durch die Extension
+│       ├── App.tsx     # Letztendlicher Eingangspunkt für die Geschäftslogik des Momments Projekts
+│       ├── main.css    # Globale Styles
+│       ├── store.ts    # SolidJS Store
+│       ├── components  # Sammlung jeglicher UI Komponenten
+│       ├── services    # Sammlung jeglicher Services für die Verwendung des Backends (und Logik für Referenzsongeinbettung)
+│       └── utils       # Hilfsdateien, wie ein HTTP-Client und das Blockieren von Keyboard-Shortcuts
+├── example.env         # Template für benötigte .env Datei
+├── globals.d.ts        # Globale Typdefinition für verbesserte Einbindung von Bibliotheken ohne TypeScript Unterstützung
+├── lib                 # Sammlung weiterer nicht-npm Module
+│   └── wavesurfer-multitrack   # Modifiziertes wavesurfer-multitrack Projekt
+├── tsconfig.json       # Konfiguration von TypeScript
+└── wxt.config.ts       # Konfiguration von WXT (Framework für verbesserte Extension Entwicklung)
+```
 
 ## Abhängigkeiten
 Hier werden Abhängigkeiten aufgelistet, die nicht über die `package.json` Datei direkt einsehbar sind. Für Bibliotheksabhängigkeiten sollte die `package.json` Datei konsultiert werden.
