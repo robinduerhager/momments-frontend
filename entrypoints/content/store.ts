@@ -1,5 +1,5 @@
 import { createStore } from 'solid-js/store'
-import { CommentDTO, DiscussionDTO } from '$/services'
+import { DiscussionDTO } from '$/services'
 
 type MommentsStore = {
     user: {
@@ -22,14 +22,14 @@ export const [mommentsStore, setMommentsStore] = createStore<MommentsStore>({
         token: '',
         name: undefined,
         avatar: undefined
-    },            // The user that is currently logged in
+    },                          // The user that is currently logged in
     discussions: {
-        list: [],       // All the discussions that are available in the workspace
-        active: undefined,     // The currently active discussion in the workspace
+        list: [],               // All the discussions that are available in the workspace
+        active: undefined,      // The currently active discussion in the workspace
     },
     audioInputDevice: undefined,
-    appActive: false,    // Whether the Discussion Mode is active in the workspace
-    settingsOpened: false,  // Whether the settings popover is opened
+    appActive: false,           // Whether the Discussion Mode is active in the workspace
+    settingsOpened: false,      // Whether the settings popover is opened
     placeNewDiscussionMode: false
   })
 

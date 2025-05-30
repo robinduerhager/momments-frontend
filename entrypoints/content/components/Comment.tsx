@@ -5,12 +5,14 @@ import { Avatar, DateDisplay, CompositionViewer } from '$/components'
 import { PublishButton } from './PublishButton'
 import { setDiscussions } from '$/store'
 import { refSongEmbedder } from '$/services/embedders'
-import { CommentAudioMessageModuleDTO, CommentRefSongModuleDTO } from '$/services/commentModules'
 
 export const Comment = (props: {
     comment: CommentDTO
 }) => {
 
+    /**
+     * @description Handles the publishing of a comment. It calls the Backend for publishing the comment and updates the comment in the store with the new published and publishedAt values.
+     */
     const handlePublishComment = async () => {
         const updatedComment = await CommentService.publishComment(props.comment.id)
 
@@ -24,6 +26,9 @@ export const Comment = (props: {
         }))
     }
 
+    /**
+     * @description Handles the deletion of a CommentModule. It calls the Backend for removal and removes the module from the comment's modules list in the store.
+     */
     const handleModuleDelete = async (id: number) => {
         const deletedModuleId = await CommentModulesService.delete(id)
 
@@ -46,13 +51,14 @@ export const Comment = (props: {
                     </Show>
                 </div>
 
+                {/* UploadButton for publishing comments in discussions */}
                 <Show when={!props.comment.published}>
                     <PublishButton commentHasModules={Boolean(props.comment.modules.length)} onClick={handlePublishComment} />
                 </Show>
             </div>
 
-            {/* TODO Add Composition Type */}
             <div class='flex flex-col gap-1'>
+                {/* Depending on the CommentModuleType, render a different module */}
                 <For each={props.comment.modules}>
                     {(module) => {
                         if (module.type === CommentModuleType.TEXT) {

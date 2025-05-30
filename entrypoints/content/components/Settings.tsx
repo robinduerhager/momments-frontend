@@ -9,6 +9,9 @@ export const Settings = () => {
     const [availableAudioInputDevices, setAvailableAudioInputDevices] = createSignal<MediaDeviceInfo[]>([])
     let popoverRef: HTMLDivElement | undefined
 
+    /**
+     * @description Handles the login process by sending the user secret to the UserService. 
+     */
     const handleLogin = async () => {
         const secretResponse = await UserService.login(secret())
 
@@ -18,11 +21,17 @@ export const Settings = () => {
         setUser('token', secretResponse.data.token)
     }
 
+    /**
+     * @description Handles the logout process by clearing the user token and setting the appActive state to false.
+     */
     const handleLogout = () => {
         setUser('token', '')
         setMommentsStore('appActive', false)
     }
 
+    /**
+     * @description Handles the toggle event of the Settings popover.
+     */
     const handlePopoverToggle = (e: Event) => {
         if ((e as ToggleEvent).newState === 'open') {
             setMommentsStore('settingsOpened', true)
@@ -59,7 +68,6 @@ export const Settings = () => {
             keyblocker.setup()
         } else {
             if (!mommentsStore.appActive) {
-                console.log('cleanup settings');
                 keyblocker.remove()
             }
         }

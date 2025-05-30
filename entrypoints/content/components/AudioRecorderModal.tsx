@@ -18,6 +18,11 @@ export const AudioRecorderModal = (props: {
         setIsVisible(true)
     }
 
+    /**
+     * 
+     * @description Handles the saving of an audio message. It uploads the recorded audio blob to S3, creates a new AudioModule in the database, and appends it to the active discussion's comment.
+     * @param blob The recorded audio blob that should be saved as an audio message module.
+     */
     const handleAudioMessageSave = async (blob?: Blob) => {
         if (!blob)
             return console.error("can't save audio message")

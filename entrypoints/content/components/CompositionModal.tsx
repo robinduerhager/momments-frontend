@@ -18,16 +18,18 @@ export const CompositionModal = (props: {
         setIsVisible(true)
     }
 
+    /**
+     * @description Handles the saving of a composition. It receives an array of AudioTracks, each containing a fileId to the according audioFile, startPosition, startCue, and endCue.
+     * @param tracks An array of tracks that will be linked to the already uploaded AudioFiles in the backend.
+     */
     const handleOnSaveComposition = async (tracks: {
             fileId: number
             startPosition: number,
-            // volume: number,
             startCue: number,
             endCue: number
     }[]) => {
-        // Create new CompositionModule with the tracks which have to be linked to
-        // the already uploaded AudioFiles (fileId)
-        const compositionModule = await CommentModulesService.createCommendCompositionModule({
+        // Create new CompositionModule with the provided tracks (they will be linked to the already uploaded S3 AudioFiles)
+        const compositionModule = await CommentModulesService.createCommentCompositionModule({
             commentId: props.commentId,
             tracks
         })
@@ -40,6 +42,8 @@ export const CompositionModal = (props: {
         handleClose()
     }
 
+    // Way easier way to use a modal with the help of signals
+    // This gets called whenever isVisible changes its value
     createEffect(() => {
         if (isVisible()) {
             compositionModal?.showModal()

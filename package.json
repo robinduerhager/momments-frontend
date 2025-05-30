@@ -24,8 +24,7 @@
     "solid-icons": "^1.1.0",
     "solid-js": "^1.9.3",
     "tailwindcss": "^4.0.7",
-    "wavesurfer-multitrack": "file:lib/wavesurfer-multitrack",
-    "wavesurfer.js": "^7.9.1"
+    "wavesurfer-multitrack": "file:lib/wavesurfer-multitrack"
   },
   "devDependencies": {
     "@types/chrome": "^0.0.280",

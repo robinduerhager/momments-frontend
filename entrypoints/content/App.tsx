@@ -1,4 +1,4 @@
-import '@webcomponents/custom-elements';
+import '@webcomponents/custom-elements';  // Important polyfill for using custom webcomponents, like emoji-mart in Browserextensions
 import { Show } from "solid-js";
 import { mommentsStore, discussions, setDiscussions, user, setMommentsStore } from '$/store';
 import { ActivationButton, SettingsButton, Discussion, DiscussionProxy, AddDiscussionButton, MommentsCanvas } from '$/components';
@@ -20,30 +20,33 @@ function App() {
     // Request Audio Device Access on App load
     await navigator.mediaDevices.getUserMedia({ audio: true })
 
-    // Immediately set the first audio input device as the default, so the app doesn't crash
+    // Request mediaDevices access and immediately set the first audio input device as the default, so the app won't crash
     const devices = await navigator.mediaDevices.enumerateDevices()
     setMommentsStore('audioInputDevice', devices.filter(device => device.kind === 'audioinput')[0])
 
+    // Interval for refetching the discussions and updating their readBy property for the awarenesspoint
     discussionsFetchIntervalHandler = setInterval(async () => {
+      // If the user is logged in
       if (user.token) {
+        // Init fetch
         if (!discussions.list.length) {
-          // Init fetch
           const dbDiscussions = await DiscussionService.getDiscussions()
           setDiscussions('list', dbDiscussions)
+          // 
         } else {
-
           // Props that can change: readBy
           // discussions can be found and updated by their ID
           // if the discussion is not found, it is added to the list
           const dbDiscussions = await DiscussionService.getDiscussions()
 
-          // create a list of discussions that are new to the store
+          // filter the dbDiscussions to find those that are not already in the store, e.g. were created between this and the last fetch
           const newDiscussions = dbDiscussions.filter(
             dbDisc => !discussions.list.some(disc => disc.id === dbDisc.id)
           );
 
           // append the new Discussions to the store
-          // Necessary, so not all discussions (and popovers) get rerendered
+          // we can't set the array to a new array and therefore have to update more granular.
+          // Setting to a new array would lead to a rerender of all discussions and their popovers (which would look like the App closes the popovers all the time)
           if (newDiscussions.length > 0) {
             for (const newDiscussion of newDiscussions) {
               setDiscussions('list', discussions.list.length, newDiscussion)
@@ -51,14 +54,12 @@ function App() {
           }
 
           // For the awareness feature, we have to update the readBy property of every discussion
-          // If we set a new array of discussions, the popovers will rerender as well
-
-          // First get all (from the db marked) now unread Discussions
+          // First get all by the user unread discussions (e.g. new discussions and those with new content)
           const unreadDiscussions = dbDiscussions.filter(dbDisc => !dbDisc.readBy)
           const updateableReadDiscussionIndices: number[] = []
 
-          // Find the indices of the now unread discussions in the local discussion store
-          // and keep an index array of the discussions which should be now marked by the awareness feature
+          // Find the indices of the now unread discussions in the local discussion store (using an indices array will lead to a better update performance according to solidjs docs)
+          // and keep an index array of the discussions which should now be marked with an awarenesspoint
           for (const unreadDiscussion of unreadDiscussions) {
             const idx = discussions.list.findIndex((discussion) => discussion.id === unreadDiscussion.id)
             if (idx !== -1)
@@ -74,21 +75,6 @@ function App() {
     }, 1000 * 60) // 1 Minute delay for updating the locally stored discussions
   })
 
-//   const blockKeydown = (event: KeyboardEvent) => {
-//     event.stopPropagation();
-//     event.stopImmediatePropagation();
-// }
-
-  // createEffect(() => {
-  //   if (mommentsStore.appActive) {
-  //     document.addEventListener('keydown', blockKeydown, true)
-  //     window.addEventListener('keydown', blockKeydown, true)
-  //   } else {
-  //     document.removeEventListener('keydown', blockKeydown, true)
-  //     window.removeEventListener('keydown', blockKeydown, true)
-  //   }
-  // })
-
   createEffect(async () => {
     // Init fetch on Login (so the users don't have to wait a minute to see any discussions)
     if (user.token) {
@@ -103,9 +89,6 @@ function App() {
 
   return (
     <>
-      {/* <div ref={emojiref}></div> */}
-      {/* <EmojiPicker data={data} /> */}
-      {/* Momments Comments Canvas */}
       <Show when={mommentsStore.appActive}>
         {/* Blocks interaction with the website below */}
         <MommentsCanvas />

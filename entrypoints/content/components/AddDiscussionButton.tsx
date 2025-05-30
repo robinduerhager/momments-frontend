@@ -2,6 +2,9 @@ import { FaSolidPlus } from 'solid-icons/fa'
 import { setMommentsStore } from '../store'
 
 export const AddDiscussionButton = () => {
+    /**
+     * @description Activates the discussion placement mode. This mode shows a DiscussionProxy at the cursor of the user and allows the user to place a new discussion by clicking on the desired position in the workspace.
+     */    
     const activateDiscussionPlacementMode = () => {
         setMommentsStore('placeNewDiscussionMode', true)
     }

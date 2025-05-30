@@ -36,6 +36,10 @@ export const CompositionEditor = (props: {
         }
     }
 
+    /**
+     * @description Handles the addition of a new audio track to the multitrack editor. Uploads the recorded audio blob to S3, creates a new AudioFile in the database, and adds the URL of the uploaded audiofile as a new track to the multitrack editor.
+     * @param blob The recorded audio blob that should be added as a new track to the multitrack editor.
+     */
     const handleAddAudioTrack = async (blob?: Blob) => {
         
         if (!blob)
@@ -59,7 +63,7 @@ export const CompositionEditor = (props: {
             volume: 0.95,
             startCue: 0.5,
             endCue: 1,
-            url: audioFile.fileName, //URL.createObjectURL(blob!), //some blob sometimes ended up in not being rendered somehow
+            url: audioFile.fileName, // I would like to have used URL.createObjectURL(blob!) for this, but often times this lead to ambiguous errors. Using an S3 URL is somehow more reliable
             options: {
                 height: trackHeight
             }
@@ -70,16 +74,20 @@ export const CompositionEditor = (props: {
         setAudioFilesStore(audioFilesStore.length, { id: audioFile.id, fileName: audioFile.fileName, muted: false })
     }
 
+    /**
+     * @description Recreates the multitrack instance with the given tracks. This is necessary because wavesurfer-multitrack does not provide a way to remove tracks, so we have to destroy and recreate the instance with new tracks.
+     * @param tracks The tracks to recreate the multitrack instance with.
+     */
     const recreateMultitrackInstance = (tracks: MultitrackTracks) => {
         if (multitrack()) {
             multitrack()?.destroy()
         }
 
         setMultitrack(WavesurferMultitrack.create(sanitizeTracks(tracks), {
-            container: wavesurferMultitrackRoot!, // required!
-            minPxPerSec: 10, // zoom level
-            rightButtonDrag: false, // set to true to drag with right mouse button
-            dragBounds: false,
+            container: wavesurferMultitrackRoot!, // Wavesurfer-Multitrack mounts into an HTML Element so this field is required!
+            minPxPerSec: 10,
+            rightButtonDrag: false,
+            dragBounds: false, // Enables dragging of tracks outside the container (just to the right, removing bounds to the left is only possible via the modified version in lib/wavesurfer-multitrack)
             cursorWidth: 2,
             cursorColor: '#D72F21',
             trackBackground: '#2D2D2D',
@@ -87,12 +95,20 @@ export const CompositionEditor = (props: {
         }))
     }
 
+    // The track with the id 'placeholder' is important for wavesurfer-multitrack but not for our application, so remove it
+    /**
+     * 
+     * @description This function is used to sanitize the tracks before saving them to the database. It filters out the track with the id 'placeholder' which is used by wavesurfer-multitrack for internal purposes but not needed in our application.
+     * @param tracks The tracks to sanitize.
+     * @returns An array of tracks without the 'placeholder' track.
+     */
     const sanitizeTracks = (tracks?: MultitrackTracks) => tracks ? tracks.filter(t => t.id !== 'placeholder') ?? [] : []
 
+    /**
+     * @description This function aggregates all the tracks and uplifts them into the CompositionModal save method.
+     */
     const onSave = () => {
         // Aggregate all the tracks and uplift them to the CompositionModal for saving
-        // track.id = audioFile id in the DB
-        // track.fileName = s3 URL which should be remove for storing, since the db already has the s3 fileName stored
         const tracks = sanitizeTracks(multitrack()?.tracks)
 
         if (!tracks)
@@ -100,10 +116,10 @@ export const CompositionEditor = (props: {
 
         props.onSave(
             tracks.map(track => {
-                // We only store startPosition, startCue and endCue
+                // We only store startPosition, startCue and endCue. track.fileName (the s3 URL) is already stored in the database (as the audioFile), doesn't need to be stored twice
                 // Volume is for isolating audio tracks, for individual critical listening
                 return {
-                    fileId: track.id,
+                    fileId: track.id, // track.id is the audioFile ID and therefore its foreign key in the Database which we have to connect here
                     startPosition: track.startPosition,
                     // volume: track.volume,
                     startCue: track.startCue,
@@ -130,6 +146,7 @@ export const CompositionEditor = (props: {
                                         if (!newTracks)
                                             return console.error('Failed to remove track')
 
+                                        // Recreate the multitrack instance with the new tracks to update the UI (this is bad practice but practical for the prototype since there is no removeTrack function in wavesurfer-multitrack and somehow adding this to the library is way more complicated than expected)
                                         recreateMultitrackInstance(newTracks)
                                         setAudioFilesStore(audioFilesStore.filter(file => file.id !== audioFile.id))
                                     }}><FaSolidTrash size={18} /></button>
@@ -144,9 +161,11 @@ export const CompositionEditor = (props: {
                             </>}
                         </For>
                     </div>
+                    {/* wavesurfer-multitrack will mount here */}
                     <div class="grow" ref={wavesurferMultitrackRoot}></div>
                 </div>
             </div>
+                {/* Multitrack uses the AudioRecorder for recording tracks */}
                 <div class="flex justify-center">
                     <AudioRecorder onRecord={() => { if (!multitrack()?.isPlaying()) { multitrack()?.seekTo(0); multitrack()?.play() } }} onStop={() => { if (multitrack()?.isPlaying()) multitrack()?.pause() }} onSaveClicked={handleAddAudioTrack} />
                     <button class="button-primary bg-green-600 self-end" onClick={onSave}>Save</button>

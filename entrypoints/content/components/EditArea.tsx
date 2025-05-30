@@ -14,21 +14,32 @@ export const EditArea = (props: {
     const [showEmojiPicker, setShowEmojiPicker] = createSignal(false)
     const [spotifyInput, setSpotifyInput] = createSignal('')
     let refSongModuleModal: HTMLDialogElement | undefined;
-    let compositionModuleModal: HTMLDialogElement | undefined;
 
+    /**
+     * @description derived Signal that returns the ID of the current draft comment. It filters the active discussion's comments to find the first comment that is not published, i.e. a draft.
+     * @returns The ID of the draft comment or undefined if no draft exists.
+     */
     const draftId = () => discussions.active?.comments.filter(comment => !comment.published)[0].id
 
+    /**
+     * @description Toggles the visibility of the EmojiPicker component.
+     */
     const toggleEmojiPicker = () => {
         setShowEmojiPicker(!showEmojiPicker())
     }
 
+    /**
+     * @description Handles the selection of an emoji from the EmojiPicker. Appends the selected emoji to the current draft text and unmounts the EmojiPicker afterwards.
+     * @param emoji The emoji object selected from the EmojiPicker.
+     */
     const handleEmojiSelect = (emoji: any) => {
-        // Append the emoji to the draft text
-        // And unmount the Emoji Picker
         setDraftText(draftText() + emoji.native)
         setShowEmojiPicker(false)
     }
 
+    /**
+     * @description Appends a text module to the current draft comment of the actively opened discussion.
+     */
     const appendTextModule = async (e: MouseEvent) => {
         if (!discussions.active)
             return console.error('No active discussion')
@@ -55,17 +66,17 @@ export const EditArea = (props: {
 
     return (
         <>
-            {/* Show the Edit Area when a draft is present, else the Add Comment button */}
-            {/* <Show when={discussions.active?.comments.length !== 0 && discussions.active?.comments.filter(comment => !comment.published)}> */}
             <div class='flex mb-3 justify-evenly'>
-                {/* <button class='button-primary' popoverTarget={`discussion-${props.discussionId}-spotify-popover`}><FaBrandsSpotify size={18} /></button> */}
                 <button class='button-primary' onClick={() => {
                     refSongModuleModal?.showModal()
                 }}><FaBrandsSpotify size={18} /></button>
-                {/* Edit Area will only be rendered, if a draft exists */}
+
+                {/* Audio Module Modal */}
                 <Show when={mommentsStore.audioInputDevice}>
                     <AudioRecorderModal commentId={draftId()!} />
                 </Show>
+
+                {/* Composition Modal */}
                 <Show when={mommentsStore.audioInputDevice}>
                     <CompositionModal commentId={draftId()!} />
                 </Show>
@@ -103,42 +114,27 @@ export const EditArea = (props: {
                             setSpotifyInput('')
                         }}><FaSolidPaperPlane size={18} /></button>
                     </div>
-
-                </dialog>
-
-                {/* Audio Module Modal */}
-                {/* <dialog class='min-w-80' ref={audioMessageModuleModal}>
-                    <div class='flex justify-end'><button onClick={() => {
-                        audioMessageModuleModal?.close()
-                    }}><FaSolidX size={18} /></button></div>
-                    <Show when={mommentsStore.audioInputDevice}>
-                        <AudioRecorder />
-                    </Show>
-                </dialog> */}
-
-                {/* Composition Modal */}
-                <dialog ref={compositionModuleModal}>
-                    <button class="button-primary" onClick={() => {
-                        compositionModuleModal?.close()
-                    }}>Close Composition Modal</button>
                 </dialog>
             </div>
+
+            {/* Texter */}
             <div class="flex p-2 border-solid border-zinc-200 border rounded-md">
                 <textarea class='grow mr-2.5' style={`resize: none;`} onInput={(e) => { setDraftText(e.target.value) }} value={draftText()}></textarea>
                 <div class='flex flex-col gap-2.5'>
+                    {/* Button for adding the Text as TextModule to the draft */}
                     <button onClick={appendTextModule}>
                         <FaSolidArrowUp size={18} />
                     </button>
+                    {/* Toggle Emojipicker Button */}
                     <button onClick={toggleEmojiPicker}>
                         <FaRegularFaceSmile size={18} color='#9F9FA9' />
                     </button>
+                    {/* Show the EmojiPicker when it has been toggled */}
                     <Show when={showEmojiPicker()}>
                         <EmojiPicker onEmojiSelect={handleEmojiSelect} />
                     </Show>
                 </div>
             </div>
-            {/* </Show> */}
-
         </>
     )
 }

@@ -6,10 +6,17 @@ export const DateDisplay = (props: {
     const [now, setNow] = createSignal(new Date(Date.now()))
     let updateNowIntervalHandler: NodeJS.Timeout | undefined = undefined
 
+    /**
+     * @description Updates the now signal with the current time.
+     */
     const updateNow = () => {
         setNow(new Date(Date.now()))
     }
 
+    /**
+     * @description Calculates the difference between the current time and the provided date in weeks, days, hours, and minutes.
+     * @returns An object containing the difference in weeks, days, hours, and minutes.
+     */
     const diffDates = (): {
         weeks: number,
         days: number,
@@ -17,7 +24,7 @@ export const DateDisplay = (props: {
         minutes: number,
     } => {
         // now() will always be greater than props.date.getTime()
-        // order matters in subtraction
+        // order matters in subtraction!
         return {
             weeks: Math.floor((now().getTime() - props.date.getTime()) / (1000 * 60 * 60 * 24 * 7)),
             days: Math.floor((now().getTime() - props.date.getTime()) / (1000 * 60 * 60 * 24)),
@@ -26,6 +33,11 @@ export const DateDisplay = (props: {
         }
     }
 
+    /**
+     * @description Helper function to determine if the plural form should be used for the time unit.
+     * @param time The time in weeks, days, hours, or minutes.
+     * @returns A string 's' if the time is greater than 1, otherwise an empty string.
+     */
     const needsS = (time: number) => time > 1 ? 's' : ''
 
     onMount(() => {

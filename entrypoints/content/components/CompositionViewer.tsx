@@ -37,9 +37,9 @@ export const CompositionViewer = (props: {
         }))
 
         setMultitrack(WavesurferMultitrack.create(tracks, {
-                container: multitrackRoot!, // required!
-                rightButtonDrag: false, // set to true to drag with right mouse button
-                dragBounds: false,
+                container: multitrackRoot!, // WaveSurfer Multitrack mounts into an HTML Element so this field is required!
+                rightButtonDrag: false,
+                dragBounds: false,          // Enables dragging of tracks outside the container (just to the right, removing bounds to the left is only possible via the modified version in lib/wavesurfer-multitrack)
                 cursorWidth: 2,
                 cursorColor: '#D72F21',
                 trackBackground: '#2D2D2D',
@@ -60,6 +60,9 @@ export const CompositionViewer = (props: {
         multitrack()?.destroy()
     })
 
+    /**
+     * @description Toggles the play/pause state of the multitrack player.
+     */
     const handleTogglePlayButton = () => {
         if (!multitrack())
             return console.error('No multitrack found')
@@ -73,6 +76,11 @@ export const CompositionViewer = (props: {
         }
     }
 
+    /**
+     * @description Toggles the mute state of a track in the multitrack player.
+     * @param idx The index of the track to toggle mute for.
+     * @param wasMuted If the track was muted before. Helps in determining the new volume.
+     */
     const toggleMute = (idx: number, wasMuted: boolean) => {
         if (!multitrack())
             return console.error('No multitrack found')
@@ -88,7 +96,6 @@ export const CompositionViewer = (props: {
                     <FaSolidPlay size={18} />
                 </Show>
             </button>
-            {/* <div class={`${!props.comment.publishedAt ? 'flex pr-5 items-center' : 'flex pr-5 items-center'}`}> */}
             <div class="flex pr-5 items-center">
                 <div class="flex flex-col">
                     <For each={mutedTracks}>

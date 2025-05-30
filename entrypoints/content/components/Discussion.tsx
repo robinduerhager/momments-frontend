@@ -14,8 +14,10 @@ export const Discussion = (props: {
     let commentsListRef: HTMLDivElement | undefined
     const draftExists = () => discussions.active?.comments.filter(comment => !comment.published).length === 1
 
-    // Set Active Discussion when Popover Opens
-    // Unset Active DIscussion when Popover Closes
+    /**
+     * @description Handles the toggle event of the discussion popover. If the popover is opened, it fetches the complete discussion with all comments and sets it as the active discussion. If it closes, it unsets the active discussion.
+     * @param event The toggle event that is triggered when the popover is opened or closed.
+     */
     const onToggleDiscussionPopover = async (event: ToggleEvent) => {
         // If popover has been opened: get all Comments for this Discussion
         if (event.newState === 'open') {
@@ -29,10 +31,16 @@ export const Discussion = (props: {
         }
     }
 
+    /**
+     * @description Adjusts the scroll of the comments list to the bottom, so the latest comment is always visible.
+     */
     const adjustScroll = () => {
         commentsListRef?.children[commentsListRef.children.length - 1]?.scrollIntoView(false)
     }
 
+    /**
+     * @description Handles the creation of a new draft comment in the active discussion. It checks if a draft already exists for this discussion and user, and if not, it creates a new draft comment.
+     */
     const handleDraftCreation = async () => {
         if (!discussions.active)
             return console.error('No active discussion')
@@ -71,7 +79,7 @@ export const Discussion = (props: {
         discussions.active?.comments.filter(comment => !comment.published)[0]?.modules?.length
         discussions.active?.comments.length
         if (discussions.active) {
-            console.log('clicked discussion ID: ', discussions.active.id)
+            console.log('clicked discussion ID: ', discussions.active.id)   // Important for debugging and the test, if someone needs to delete a discussion (deletion was not implemented yet)
         }
         adjustScroll()
     })
@@ -97,6 +105,7 @@ export const Discussion = (props: {
                             </For>
                         </div>
                         <div class="flex flex-col justify-center border-t border-t-zinc-300 p-3">
+                            {/* The Edit Area will only be rendered, if a draft exists */}
                             <Show when={draftExists()} fallback={<button class="button-primary" onClick={handleDraftCreation}>Add Draft</button>}>
                                 <EditArea discussionId={props.discussion.id} />
                             </Show>
@@ -108,16 +117,24 @@ export const Discussion = (props: {
     )
 }
 
-// Variant of the Discussion above without Awareness and popover functionality
-// so the user can see where he will place a new Discussion
+/**
+ * @description The DiscussionProxy is a component that allows the user to place a new discussion on the page. It shows a discussion icon at the cursor position and creates a new discussion when clicked.
+ */
 export const DiscussionProxy = () => {
     const [position, setPosition] = createSignal<Position>({ posX: 0, posY: 0 })
 
+    /**
+     * @description Updates the position of the DiscussionProxy icon based on the mouse cursor position.
+     * @param e The MouseEvent that is triggered when the user moves the mouse.
+     */
     const updatePosition = (e: MouseEvent) => {
         // By subtracting half of the icon size, the cursor will be in the center of the icon
         setPosition({ posX: e.clientX - iconSize / 2, posY: e.clientY - iconSize / 2 })
     }
 
+    /**
+     * @description Initializes the discussion creation process by calling the DiscussionService to create a new discussion at the current position.
+     */
     const initDiscussionCreation = async () => {
         // API call for creating a new Discussion
         const newDiscussion = await DiscussionService.createDiscussion(position())
