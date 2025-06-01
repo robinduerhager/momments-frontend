@@ -6,7 +6,7 @@ Dieses Projekt enthält jeglichen Quellcode für das Frontend des Momments-Proto
 ## Aufsetzen des Projekts
 1. Kopiere dieses Projekt in einen Ordner deiner Wahl
 2. Gehe in das Projekt per `cd momments-frontend`
-3. Gehe sicher, dass `lib/wavesurfer-multitrack` existiert
+3. Gehe sicher, dass eine Version der [modifizierten Wavesurfer-Multitrack Bibliothek](https://github.com/robinduerhager/wavesurfer-multitrack) in `lib/wavesurfer-multitrack` existiert
    1. Ansonsten gehe über `cd lib` in das Verzeichnis
    2. Klone das Projekt über `git clone https://github.com/robinduerhager/wavesurfer-multitrack.git`
    3. und gehe in den Branch `momments-patches` per `git checkout momments-patches`
