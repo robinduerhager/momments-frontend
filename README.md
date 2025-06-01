@@ -19,25 +19,25 @@ Dieses Projekt enthält jeglichen Quellcode für das Frontend des Momments-Proto
 Sobald Schritt 6 ausgeführt wurde, sollte sich eine Google Chrome Instanz öffnen, welche die Browsererweiterung beinhaltet. Im Entwicklungsmodus wird die Erweiterung auf `https://www.soundtrap.com/studio/*` und `https://www.google.de/*` aktiviert. Wenn die Erweiterung über `npm run build` für die Produktion gebaut wurde, wird die Erweiterung nur bei `https://www.soundtrap.com/studio/*` aktiviert. Die Liste dieser URLs kann in `entrypoints/content/index.tsx` angepasst werden.
 
 ## Projektstruktur
-Im Folgenden wird die Ordnerstruktur dargestellt und über Kommentare kurz und prägnant erläutert. Dabei wird nicht auf Ordner in der Projektstruktur eingegangen, die nicht für das Projekt aktiv verwendet wurden. Beispielsweise wurden `assets` und `public` nicht für die Entwicklung des Projekts benötigt aber vollständigkeitshalber nicht aus dem Projekt entfernt. Weitere Dateien, wie die `package*.json` Dateien und diese `README.md` Datei wurden aus Platzgründen ausgelassen. Die `package.json` definiert dieses NodeJS Projekt und stellt beispielsweise alle verwendeten Bibliotheken und ihre Versionen dar.
+Im Folgenden wird die Ordnerstruktur dargestellt und über Kommentare kurz und prägnant erläutert. Dabei wird nicht auf Ordner in der Projektstruktur eingegangen, die nicht für das Projekt aktiv verwendet wurden. Beispielsweise wurden `assets` und `public` nicht für die Entwicklung des Projekts benötigt aber vollständigkeitshalber nicht aus dem Projekt entfernt. Weitere Dateien, wie die `package*.json` Dateien und diese `README.md` Datei wurden zur Übersichtlichkeit aus der Auflistung ausgelassen. Die `package.json` definiert dieses NodeJS Projekt und stellt dabei alle ihre verwendeten Bibliotheken und deren Versionen dar.
 
 ```bash
 momments-frontend/
-├── entrypoints         # Jeglicher Projektcode für die Extension
-│   └── content         # Eingangspunkt für content-scripts
-│       ├── index.tsx   # Injektion des restlichen Codes des Momments Projekts durch die Extension
-│       ├── App.tsx     # Letztendlicher Eingangspunkt für die Geschäftslogik des Momments Projekts
-│       ├── main.css    # Globale Styles
-│       ├── store.ts    # SolidJS Store
-│       ├── components  # Sammlung jeglicher UI Komponenten
-│       ├── services    # Sammlung jeglicher Services für die Verwendung des Backends (und Logik für Referenzsongeinbettung)
-│       └── utils       # Hilfsdateien, wie ein HTTP-Client und das Blockieren von Keyboard-Shortcuts
-├── example.env         # Template für benötigte .env Datei
-├── globals.d.ts        # Globale Typdefinition für verbesserte Einbindung von Bibliotheken ohne TypeScript Unterstützung
-├── lib                 # Sammlung weiterer nicht-npm Module
+├── entrypoints                 # Jeglicher Projektcode für die Extension
+│   └── content                 # Eingangspunkt für content-scripts
+│       ├── index.tsx           # Injektion des restlichen Codes des Momments Projekts durch die Extension
+│       ├── App.tsx             # Letztendlicher Eingangspunkt für die Geschäftslogik des Momments Projekts
+│       ├── main.css            # Globale Styles
+│       ├── store.ts            # SolidJS Store
+│       ├── components          # Sammlung jeglicher UI Komponenten
+│       ├── services            # Sammlung jeglicher Services für die Verwendung des Backends (und Logik für Referenzsongeinbettung)
+│       └── utils               # Hilfsdateien, wie ein HTTP-Client und das Blockieren von Keyboard-Shortcuts
+├── example.env                 # Template für benötigte .env Datei
+├── globals.d.ts                # Globale Typdefinition für verbesserte Einbindung von Bibliotheken ohne TypeScript Unterstützung
+├── lib                         # Sammlung weiterer nicht-npm Module
 │   └── wavesurfer-multitrack   # Modifiziertes wavesurfer-multitrack Projekt
-├── tsconfig.json       # Konfiguration von TypeScript
-└── wxt.config.ts       # Konfiguration von WXT (Framework für verbesserte Extension Entwicklung)
+├── tsconfig.json               # Konfiguration von TypeScript
+└── wxt.config.ts               # Konfiguration von WXT (Framework für verbesserte Extension Entwicklung)
 ```
 
 ## Abhängigkeiten
