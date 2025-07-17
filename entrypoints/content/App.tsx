@@ -11,7 +11,7 @@ function App() {
     const hideRemoteCursorStyle = document.createElement('style')
     // Hide any comment and discussion related elements from Soundtrap
     hideRemoteCursorStyle.innerHTML = `
-    .discussionstab, .comment-anchor, .timeline-add-discussion-thread-button, ul[role=menu]>li:nth-child(4) {
+    #chattab-button, .discussionstab, .comment-anchor, .timeline-add-discussion-thread-button, ul[role=menu]>li:nth-child(4) {
       display: none !important;
     }
     `

@@ -3,7 +3,7 @@ import { render } from 'solid-js/web'
 import App from './App'
 
 export default defineContentScript({
-  matches: import.meta.env.DEV ? ['https://www.soundtrap.com/studio/*', 'https://www.google.de/*', 'https://www.google.com/*'] : ['https://www.soundtrap.com/studio/*'],
+  matches: import.meta.env.DEV ? ['*://*.soundtrap.com/studio/*', '*://www.google.com/*'] : ['https://www.soundtrap.com/studio/*'],
   // 2. Set cssInjectionMode
   cssInjectionMode: 'ui',
 
