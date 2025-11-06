@@ -8,7 +8,7 @@ This project contains all source code for the frontend of the Momments prototype
 > * [Google Chrome](https://www.google.com/intl/de_de/chrome/) at least in the Version `136.0.7103.114`
 > * [Slightly Modified Wavesurfer-Multitrack library](https://github.com/katspaugh/wavesurfer-multitrack)
 
-## Installation
+## Installation for Development
 1. Clone this project to a folder of your choice
 2. Go into the project folder
 3. Ensure that a version of the [modified Wavesurfer-Multitrack library](https://github.com/robinduerhager/wavesurfer-multitrack) exists in `lib/wavesurfer-multitrack`
